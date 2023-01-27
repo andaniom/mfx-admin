@@ -13,16 +13,18 @@
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
 
-    <link href="css/sb-admin-2.min.css" rel="stylesheet">
-    <link href="css/app.css" rel="stylesheet">
-    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
+    <link href="{{ url('/') }}/css/sb-admin-2.min.css" rel="stylesheet">
+    <link href="{{ url('/') }}/css/app.css" rel="stylesheet">
+    <link href="{{ url('/') }}/vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
 
-    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="{{ url('/') }}/vendor/jquery/jquery.min.js"></script>
 
-    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+    <script src="{{ url('/') }}/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url('/') }}/vendor/jquery-easing/jquery.easing.min.js"></script>
 
-    <script src="js/app.js"></script>
+    <script src="{{ url('/') }}/js/app.js"></script>
+
+    <x-head.tinymce-config/>
 </head>
 <body>
 <div id="wrapper">
@@ -67,7 +69,7 @@
                                 <a class="collapse-item {{ (request()->is('admin/users/*')) || (request()->is('admin/users')) ? 'active' : '' }}"
                                    href="{{ url('admin/users') }}">Users</a>
                                 <a class="collapse-item {{ (request()->is('admin/events')) || (request()->is('admin/events/*')) ? 'active' : '' }}"
-                                   href="{{ url('admin/events') }}">Events</a>
+                                   href="{{ route('events.index') }}">Events</a>
                             </div>
                         </div>
                     </li>

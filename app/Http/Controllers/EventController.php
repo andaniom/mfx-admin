@@ -12,12 +12,12 @@ class EventController extends Controller
     public function index()
     {
         $events = DB::table('event')->paginate(10);
-        return view('events', ['events' => $events]);
+        return view('event.events', ['events' => $events]);
     }
 
     public function create()
     {
-        return view('event-create');
+        return view('event.event-create');
     }
 
     public function store(Request $request)
@@ -55,7 +55,7 @@ class EventController extends Controller
     public function detail(Request $request, $key)
     {
         $event = DB::table('event')->where('id', '=', $key)->first();
-        return view('event-detail', ['event' => $event]);
+        return view('event.event-detail', ['event' => $event]);
     }
 
     public function delete($key)

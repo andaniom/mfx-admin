@@ -1,0 +1,9 @@
+{
+    "/vendor/jquery/jquery.js": "/vendor/jquery/jquery.js",
+    "/vendor/jquery/jquery.min.js": "/vendor/jquery/jquery.min.js",
+    "/js/sb-admin-2.min.js": "/js/sb-admin-2.min.js",
+    "/vendor/bootstrap/js/bootstrap.bundle.min.js": "/vendor/bootstrap/js/bootstrap.bundle.min.js",
+    "/vendor/jquery-easing/jquery.easing.min.js": "/vendor/jquery-easing/jquery.easing.min.js",
+    "/vendor/fontawesome-free/css/all.min.css": "/vendor/fontawesome-free/css/all.min.css",
+    "/css/sb-admin-2.min.css": "/css/sb-admin-2.min.css"
+}
