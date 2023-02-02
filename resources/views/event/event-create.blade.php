@@ -22,17 +22,7 @@
                    placeholder="Description" required>
         </div>
         <div class="form-group">
-            <label for="photoInput">Photo</label>
-            <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                    <span class="input-group-text">Upload Photo</span>
-                </div>
-                <div class="custom-file">
-                    <input name="photo" type="file" class="custom-file-input" id="photoInput"
-                           accept="image/*" required>
-                    <label class="custom-file-label" for="photoInput">Choose file</label>
-                </div>
-            </div>
+            @include('components.upload.upload-image',['label'=>'Photo', 'multiple'=>true])
         </div>
         <div class="form-group">
             <label>Content</label>

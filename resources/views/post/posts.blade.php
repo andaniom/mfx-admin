@@ -1,41 +1,45 @@
 @extends('layouts.app')
 
-@section('title', 'Event')
+@section('title', 'Post')
 
 @section('content')
-    {{ Breadcrumbs::render('event') }}
+    {{ Breadcrumbs::render('post') }}
     <div class="card shadow mb-4">
         <div class="card-header py-3  d-flex justify-content-between">
-            <h6 class="m-0 font-weight-bold text-primary">{{"Event List"}}</h6>
-            <a type="button" class="btn btn-primary" href={{ route('events.create') }}>{{'Add Event'}}</a>
+            <h6 class="m-0 font-weight-bold text-primary">{{"Posts"}}</h6>
+            <a type="button" class="btn btn-primary" href={{ route('posts.create') }}>{{'Add Post'}}</a>
         </div>
         <div class="card-body">
             <div class="table-responsive">
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                     <tr>
-                        <th>Nama Event</th>
+                        <th>Title</th>
                         <th>Photo</th>
                         <th>Tanggal</th>
                         <th>Description</th>
+                        <th>Author</th>
                         <th>Action</th>
                     </tr>
                     </thead>
-                    @foreach($events as $event)
+                    @foreach($posts as $post)
                         <tbody>
-                        <td>{{ $event->name }}</td>
-                        <td><img style="width: 100px" src="{{ asset('images/'.$event->photo) }}" alt="" title=""/>
+                        <td>{{ $post->title }}</td>
+                        <td><img style="width: 100px"
+                                 src="{{ url(env("STORAGE_URL", "storage/").'posts/'.$post->photo) }}" alt=""
+                                 title=""/>
                         </td>
-                        <td>{{ $event->date }}</td>
-                        <td>{{ $event->description }}</td>
+                        <td>{{ $post->date }}</td>
+                        <td>{{ $post->description }}</td>
+                        <td>{{ $post->author }}</td>
                         <td>
-                            <a type="button" class="btn btn-primary" href="{{route('events.view', $event->id)}}"><i
+                            <a type="button" class="btn btn-primary" href="{{route('posts.view', $post->id)}}"><i
                                     class="far fa-eye"></i></a>
                             <a type="button" class="btn btn-success"><i class="fas fa-edit"></i></a>
                             <a type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalDelete"><i
                                     class="far fa-trash-alt"></i></a>
 
-                            <form action="{{ route('events.delete', $event->id) }}" method="post">
+                            <form action="{{ route('posts.delete', $post->id) }}" method="post">
                                 @csrf
                                 <div class="modal fade" id="modalDelete" tabindex="-1" role="dialog"
                                      aria-labelledby="modalDeleteTitle" aria-hidden="true">
@@ -65,7 +69,7 @@
                         </tbody>
                     @endforeach
                 </table>
-                {{ $events->links('components.pagination.custom') }}
+                {{ $posts->links('components.pagination.custom') }}
             </div>
         </div>
     </div>

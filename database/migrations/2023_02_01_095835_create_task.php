@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
+class CreateTask extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('event', function (Blueprint $table) {
+        Schema::create('tasks', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->text('photo');
-            $table->timestamp('date');
             $table->string('description');
-            $table->string('content');
-            $table->integer('status')->default(0);
+            $table->integer('progress')->default(0);
+            $table->integer('progress')->default(0);
+            $table->timestamp('date');
             $table->timestamps();
         });
     }
@@ -32,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('event');
+        Schema::dropIfExists('tasks');
     }
-};
+}

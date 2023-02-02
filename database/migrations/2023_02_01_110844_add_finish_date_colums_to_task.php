@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddRoleColumnToUsers extends Migration
+class AddFinishDateColumsToTask extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class AddRoleColumnToUsers extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->enum('role', ['user','admin','super_admin'])->default('user');
+        Schema::table('task', function (Blueprint $table) {
+            $table->timestamp('finish_date')->nullable();
         });
     }
 
@@ -25,8 +25,8 @@ class AddRoleColumnToUsers extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('role');
+        Schema::table('task', function (Blueprint $table) {
+            $table->dropColumn('finish_date');
         });
     }
-};
+}

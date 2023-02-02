@@ -24,6 +24,9 @@
 
     <script src="{{ url('/') }}/js/app.js"></script>
 
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+
     <x-head.tinymce-config/>
 </head>
 <body>
@@ -49,13 +52,21 @@
 
                 <hr class="sidebar-divider my-0">
 
+                <li class="nav-item {{ (request()->is('tasks')) ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ url('/tasks') }}">
+                        <i class="fas fa-fw fa-clipboard-list"></i>
+                        <span>Task</span></a>
+                </li>
+
+                <hr class="sidebar-divider my-0">
+
                 {{--                <li class="nav-item {{ (request()->is('events')) ? 'active' : '' }}">--}}
                 {{--                    <a class="nav-link" href="{{ url('/events') }}">--}}
                 {{--                        <i class="fas fa-fw fa-calendar-times"></i>--}}
                 {{--                        <span>Event</span></a>--}}
                 {{--                </li>--}}
 
-                @if(auth()->user()->hasRole('admin'))
+                @if(auth()->user()->checkPermission('admin'))
                     <hr class="sidebar-divider my-0">
                     <li class="nav-item ">
                         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
@@ -68,6 +79,8 @@
                             <div class="bg-white py-2 collapse-inner rounded">
                                 <a class="collapse-item {{ (request()->is('admin/users/*')) || (request()->is('admin/users')) ? 'active' : '' }}"
                                    href="{{ url('admin/users') }}">Users</a>
+                                <a class="collapse-item {{ (request()->is('admin/posts')) || (request()->is('admin/posts/*')) ? 'active' : '' }}"
+                                   href="{{ route('posts.index') }}">Posts</a>
                                 <a class="collapse-item {{ (request()->is('admin/events')) || (request()->is('admin/events/*')) ? 'active' : '' }}"
                                    href="{{ route('events.index') }}">Events</a>
                             </div>

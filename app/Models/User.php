@@ -46,4 +46,18 @@ class User extends Authenticatable
     {
         return $this->getAttribute('role') === $role;
     }
+
+    public function checkPermission(string $menu): bool
+    {
+        if ($menu == "admin") {
+            if ($this->getAttribute('role') === "super_admin" || $this->getAttribute('role') === "admin") {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        return false;
+    }
+
+
 }

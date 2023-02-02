@@ -5,13 +5,15 @@ namespace App\Http\Controllers;
 use App\Models\Event;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
+use function Sodium\add;
 
 class EventController extends Controller
 {
 
     public function index()
     {
-        $events = DB::table('event')->paginate(10);
+        $events = DB::table('event')->paginate(5);
         return view('event.events', ['events' => $events]);
     }
 
@@ -20,25 +22,41 @@ class EventController extends Controller
         return view('event.event-create');
     }
 
+    /**
+     * @throws ValidationException
+     */
     public function store(Request $request)
     {
         error_log('Some message here.');
-        $this->validate($request, [
-            'photo' => 'required|image|mimes:png,jpg,jpeg',
-            'name' => 'required',
-            'date' => 'required',
-            'description' => 'required',
-            'contentTiny' => 'required',
-        ]);
+//        $this->validate($request, [
+//            'photo' => 'required|image|mimes:png,jpg,jpeg',
+//            'name' => 'required',
+//            'date' => 'required',
+//            'description' => 'required',
+//            'contentTiny' => 'required',
+//        ]);
+        error_log('validated');
 
+        $paths = [];
         //upload image
-        $image = $request->file('photo');
-        $image->storeAs('public/events', $image->hashName());
+        if ($request->hasFile('files')) {
+            $files = $request->file('files');
+            foreach ($files as $file) {
+                $path = $file->storeAs('public/events', $file->hashName());
+                error_log($path);
+                $paths[] = $path;
+            }
+        } else {
+            error_log('no file');
+        }
+        error_log('upload image');
+//        $image = $request->file('photo');
+//        $image->storeAs('public/events', $image->hashName());
 
         $content = $request->contentTiny;
 
         $event = Event::create([
-            'photo' => $image->hashName(),
+            'photo' => implode(', ', $paths),
             'name' => $request->name,
             'description' => $request->description,
             'date' => $request->date,
