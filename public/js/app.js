@@ -106,7 +106,7 @@ $(document).on('change', '.custom-file-input', function () {
 
     if (typeof (FileReader) != "undefined") {
         var dvPreview = $("#divImageMediaPreview");
-        // dvPreview.html("");
+        dvPreview.html("");
         $($(this)[0].files).each(function () {
             var file = $(this);
             var reader = new FileReader();

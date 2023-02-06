@@ -24,7 +24,10 @@
                     @foreach($events as $event)
                         <tbody>
                         <td>{{ $event->name }}</td>
-                        <td><img style="width: 100px" src="{{ asset('images/'.$event->photo) }}" alt="" title=""/>
+                        <td>
+                            <div style="width: 100px; height: 100px">
+                                <img style="width: 100px; max-height: 100px" src="{{ asset(env("STORAGE_URL", "storage/").'events/'.$event->photo[0]) }}" alt="" title=""/>
+                            </div>
                         </td>
                         <td>{{ $event->date }}</td>
                         <td>{{ $event->description }}</td>

@@ -7,7 +7,7 @@
     <div class="media-container">
         <div class="media-renderer d-flex justify-content-center">
            {{-- <div class="bg-image" style="background-image: {{ url('storage/events/'.$event->photo) }}">{{ url('storage/events/'.$event->photo) }}</div>--}}
-            <img class="img-render img-fluid" src="{{ url(env("STORAGE_URL", "storage/").'events/'.$event->photo) }}">
+            <img class="img-render img-fluid" src="{{ url(env("STORAGE_URL", "storage/").'events/'.$event->photo[0]) }}">
 {{--            <img class="img-fluid" src="{{ url('storage/events/'.$event->photo) }}">--}}
         </div>
         <div class="mt-5">

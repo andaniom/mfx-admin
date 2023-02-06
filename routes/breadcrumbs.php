@@ -46,3 +46,7 @@ Breadcrumbs::for('task-create', function ($trail) {
     $trail->parent('task');
     $trail->push('Create', route('tasks.create'));
 });
+
+Breadcrumbs::for('attendance', function ($trail) {
+    $trail->push('Attendance', route('attendance.index'));
+});

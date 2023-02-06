@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PostController;
@@ -51,6 +52,12 @@ Route::controller(TaskController::class)->middleware(['auth'])->group(function (
     Route::get('tasks', 'index')->name('tasks.index');
     Route::post('tasks', 'store')->name('tasks.store');
     Route::get('tasks/create', 'create')->name('tasks.create');
+});
+
+Route::controller(AttendanceController::class)->middleware(['auth'])->group(function () {
+    Route::get('attendance', 'index')->name('attendance.index');
+    Route::post('attendance/checkin', 'checkIn')->name('attendance.checkin');
+    Route::post('attendance/checkout', 'checkOut')->name('attendance.checkout');
 });
 
 Route::get('/serve', function () {

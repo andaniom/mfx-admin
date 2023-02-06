@@ -6,14 +6,17 @@ use App\Models\Event;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
-use function Sodium\add;
 
 class EventController extends Controller
 {
 
     public function index()
     {
-        $events = DB::table('event')->paginate(5);
+        $events = Event::paginate(5);
+        foreach ($events as $event) {
+            $photos = explode(", ", $event->photo);
+            $event->photo = $photos;
+        }
         return view('event.events', ['events' => $events]);
     }
 
@@ -27,7 +30,6 @@ class EventController extends Controller
      */
     public function store(Request $request)
     {
-        error_log('Some message here.');
 //        $this->validate($request, [
 //            'photo' => 'required|image|mimes:png,jpg,jpeg',
 //            'name' => 'required',
@@ -35,23 +37,16 @@ class EventController extends Controller
 //            'description' => 'required',
 //            'contentTiny' => 'required',
 //        ]);
-        error_log('validated');
 
         $paths = [];
         //upload image
         if ($request->hasFile('files')) {
             $files = $request->file('files');
             foreach ($files as $file) {
-                $path = $file->storeAs('public/events', $file->hashName());
-                error_log($path);
-                $paths[] = $path;
+                $file->storeAs('public/events', $file->hashName());
+                $paths[] = $file->hashName();
             }
-        } else {
-            error_log('no file');
         }
-        error_log('upload image');
-//        $image = $request->file('photo');
-//        $image->storeAs('public/events', $image->hashName());
 
         $content = $request->contentTiny;
 
@@ -72,13 +67,16 @@ class EventController extends Controller
 
     public function detail(Request $request, $key)
     {
-        $event = DB::table('event')->where('id', '=', $key)->first();
+        $event = Event::find($key);
+        $photos = explode(", ", $event->photo);
+        $event->photo = $photos;
         return view('event.event-detail', ['event' => $event]);
     }
 
     public function delete($key)
     {
-        $event = DB::table('event')->delete($key);
+        $event = Event::find($key);
+        $event->delete();
         if ($event) {
             return redirect()->route('events.index')->with(['success' => 'Data Berhasil Dihapus!']);
         } else {

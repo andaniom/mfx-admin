@@ -67,7 +67,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+//    'timezone' => 'UTC',
 
     /*
     |--------------------------------------------------------------------------
@@ -231,5 +231,9 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
 
     ],
+
+    'timezone' => 'Asia/Jakarta',
+//    'locale' => 'id',
+//    'faker_locale' => 'id_ID',
 
 ];

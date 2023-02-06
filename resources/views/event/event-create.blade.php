@@ -22,7 +22,7 @@
                    placeholder="Description" required>
         </div>
         <div class="form-group">
-            @include('components.upload.upload-image',['label'=>'Photo', 'multiple'=>true])
+            @include('components.upload.upload-image',['label'=>'Photo', 'multiple'=>false])
         </div>
         <div class="form-group">
             <label>Content</label>

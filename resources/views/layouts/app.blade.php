@@ -8,6 +8,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>MFX ADMIN - @yield('title')</title>
+    <link href="{{ url('/') }}/img/favicon.ico" rel="icon">
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -56,6 +57,14 @@
                     <a class="nav-link" href="{{ url('/tasks') }}">
                         <i class="fas fa-fw fa-clipboard-list"></i>
                         <span>Task</span></a>
+                </li>
+
+                <hr class="sidebar-divider my-0">
+
+                <li class="nav-item {{ (request()->is('attendance')) ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ url('/attendance') }}">
+                        <i class="fas fa-fw fa-calendar"></i>
+                        <span>Attendance</span></a>
                 </li>
 
                 <hr class="sidebar-divider my-0">
