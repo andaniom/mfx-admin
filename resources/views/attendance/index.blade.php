@@ -114,12 +114,14 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
+
             $.ajax({
                 url: '/attendance/check-in',
                 method: 'post',
-                data: {
-                    _token: '{{ csrf_token() }}'
-                },
+                {{--data: {--}}
+                {{--    _token: '{{ csrf_token() }}'--}}
+                {{--},--}}
+                datatype: 'JSON',
                 success: function (response) {
                     console.log(response)
                     // location.reload();
