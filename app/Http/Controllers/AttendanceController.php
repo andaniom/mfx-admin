@@ -57,6 +57,7 @@ class AttendanceController extends Controller
 
     public function checkIn(): \Illuminate\Http\RedirectResponse
     {
+        notify()->success('Check-in');
         $today = Carbon::today();
         $userId = auth()->id();
 
@@ -74,8 +75,8 @@ class AttendanceController extends Controller
 
         if ($attendance) {
             if ($attendance->is_check_in) {
-                session()->flash('error', 'You have already checked in today!');
-                return redirect()->back()->with('error', 'You have already checked in today!');
+                notify()->error('You have already checked in today!');
+                return redirect()->back();
             }
 
             $attendance->user_id = $userId;
@@ -95,7 +96,7 @@ class AttendanceController extends Controller
         $attendance->save();
 
         notify()->success('Check-in Successful.');
-        return redirect()->back()->with('message', 'Check-in successful!');
+        return redirect()->back();
     }
 
     public function checkOut(): \Illuminate\Http\RedirectResponse
@@ -110,12 +111,12 @@ class AttendanceController extends Controller
 
         if ($attendance) {
             if (!$attendance->is_check_in) {
-                session()->flash('error', 'You have already checked in today!');
-                return redirect()->back()->with('error', 'You have not checked in today!');
+                notify()->error('You have already checked in today!');
+                return redirect()->back();
             }
             if ($attendance->is_check_out) {
-                session()->flash('error', 'You have already checked out today!');
-                return redirect()->back()->with('error', 'You have already checked out today!');
+                notify()->error('You have already checked out today!');
+                return redirect()->back();
             }
 
             $officeEnd = '17:00:00';
