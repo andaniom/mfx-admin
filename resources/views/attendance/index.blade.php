@@ -109,10 +109,12 @@
 
         // Add a click events listener to the Check In button
         checkIn.addEventListener("click", function () {
-            $.ajax({
+            $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
+                }
+            });
+            $.ajax({
                 url: '/attendance/check-in',
                 method: 'post',
                 data: {
