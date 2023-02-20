@@ -110,6 +110,10 @@ Route::get('/config-cache', function() {
     Artisan::call('config:cache');
     return 'Config cache has been cleared';
 });
+Route::get('/config-clear', function() {
+    Artisan::call('config:clear');
+    return 'Config cache has been cleared';
+});
 
 // Clear view cache:
 Route::get('/view-clear', function() {
