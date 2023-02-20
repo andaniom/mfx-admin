@@ -117,9 +117,10 @@
                     _token: '{{ csrf_token() }}'
                 },
                 success: function (response) {
-                    location.reload();
+                    // location.reload();
                 },
                 error: function (response) {
+                    console.log(response)
                     // Handle the error response
                 }
             });
