@@ -117,7 +117,7 @@
                 },
                 success: function (response) {
                     console.log(response)
-                    location.reload();
+                    // location.reload();
                 },
                 error: function (response) {
                     console.log(response)
