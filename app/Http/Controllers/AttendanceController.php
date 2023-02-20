@@ -148,7 +148,7 @@ class AttendanceController extends Controller
         notify()->success('Check-out Successful.');
         return response()->json([
             'success' => true,
-            'message' => 'Check-out Successful.'
+            'message' => 'Check-out Successful'
         ]);
     }
 
