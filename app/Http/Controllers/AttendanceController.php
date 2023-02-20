@@ -82,7 +82,6 @@ class AttendanceController extends Controller
             $attendance->is_check_in = true;
             $attendance->is_late = $isLate;
             $attendance->late_time = $late_time;
-            $attendance->save();
         } else {
             $attendance = new Attendance;
             $attendance->user_id = $userId;
@@ -91,10 +90,10 @@ class AttendanceController extends Controller
             $attendance->is_late = $isLate;
             $attendance->late_time = $late_time;
             $attendance->date = Carbon::now()->toDateString();
-            $attendance->save();
         }
+        $attendance->save();
 
-        session()->flash('success', 'Check-in Successful');
+        notify()->success('Check-in Successful.');
         return redirect()->back()->with('message', 'Check-in successful!');
     }
 
@@ -133,7 +132,7 @@ class AttendanceController extends Controller
             $attendance->save();
         }
 
-        session()->flash('success', 'Check-out Successful');
+        notify()->success('Check-out Successful.');
         return redirect()->back()->with('error', 'You have not checked in today!');
     }
 
