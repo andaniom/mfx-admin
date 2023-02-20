@@ -115,6 +115,7 @@
                 data: {
                     _token: '{{ csrf_token() }}'
                 },
+                dataType: 'json',
                 success: function (response) {
                     location.reload();
                 },
@@ -135,6 +136,7 @@
                 data: {
                     _token: '{{ csrf_token() }}'
                 },
+                dataType: 'json',
                 success: function (response) {
                     location.reload();
                 },

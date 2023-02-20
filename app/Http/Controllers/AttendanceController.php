@@ -55,7 +55,7 @@ class AttendanceController extends Controller
         }
     }
 
-    public function checkIn(): \Illuminate\Http\RedirectResponse
+    public function checkIn()
     {
         notify()->success('Check-in');
         $today = Carbon::today();
@@ -76,7 +76,10 @@ class AttendanceController extends Controller
         if ($attendance) {
             if ($attendance->is_check_in) {
                 notify()->error('You have already checked in today!');
-                return redirect()->back();
+                return response()->json([
+                    'success' => false,
+                    'message' => 'You have already checked in today!'
+                ]);
             }
 
             $attendance->user_id = $userId;
@@ -96,10 +99,13 @@ class AttendanceController extends Controller
         $attendance->save();
 
         notify()->success('Check-in Successful.');
-        return redirect()->back();
+        return response()->json([
+            'success' => true,
+            'message' => 'Check-in Successful.'
+        ]);
     }
 
-    public function checkOut(): \Illuminate\Http\RedirectResponse
+    public function checkOut()
     {
         // Code to handle check-out request
         $today = Carbon::today();
@@ -112,11 +118,17 @@ class AttendanceController extends Controller
         if ($attendance) {
             if (!$attendance->is_check_in) {
                 notify()->error('You have already checked in today!');
-                return redirect()->back();
+                return response()->json([
+                    'success' => false,
+                    'message' => 'You have already checked in today!'
+                ]);
             }
             if ($attendance->is_check_out) {
                 notify()->error('You have already checked out today!');
-                return redirect()->back();
+                return response()->json([
+                    'success' => false,
+                    'message' => 'You have already checked out today!'
+                ]);
             }
 
             $officeEnd = '17:00:00';
@@ -135,7 +147,10 @@ class AttendanceController extends Controller
         }
 
         notify()->success('Check-out Successful.');
-        return redirect()->back();
+        return response()->json([
+            'success' => true,
+            'message' => 'Check-out Successful.'
+        ]);
     }
 
     public function generatePDF(Request $request): \Illuminate\Http\Response
