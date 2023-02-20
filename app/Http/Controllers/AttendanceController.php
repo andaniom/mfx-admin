@@ -135,7 +135,7 @@ class AttendanceController extends Controller
         }
 
         notify()->success('Check-out Successful.');
-        return redirect()->back()->with('error', 'You have not checked in today!');
+        return redirect()->back();
     }
 
     public function generatePDF(Request $request): \Illuminate\Http\Response

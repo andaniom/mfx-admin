@@ -54,7 +54,8 @@ class TaskController extends Controller
         $taskHistory->updated_by = auth()->user()->id;
         $taskHistory->save();
 
-        return redirect()->route('tasks.index')->with('success', 'Task created successfully.');
+        notify()->success('Task created successfully.');
+        return redirect()->route('tasks.index');
     }
 
     public function edit(int $id = null)
