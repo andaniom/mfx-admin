@@ -114,13 +114,8 @@
             $.ajax({
                 url: '{{route('attendance.checkin')}}',
                 method: 'POST',
-                {{--data: {--}}
-                    {{--    _token: '{{ csrf_token() }}'--}}
-                    {{--},--}}
-                datatype: 'JSON',
                 success: function (response) {
-                    console.log(response)
-                    // location.reload();
+                    location.reload();
                 },
                 error: function (response) {
                     console.log(response)
@@ -129,16 +124,11 @@
             });
         });
 
-        let checkOut = document.getElementById("checkOut");
-
         // Add a click events listener to the Check Out button
-        checkOut.addEventListener("click", function () {
+        $("#checkOut").click(function(e){
             $.ajax({
-                url: '/attendance/checkout',
-                method: 'post',
-                data: {
-                    _token: '{{ csrf_token() }}'
-                },
+                url: '{{route('attendance.checkout')}}',
+                method: 'POST',
                 success: function (response) {
                     location.reload();
                 },
