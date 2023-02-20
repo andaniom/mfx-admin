@@ -74,11 +74,11 @@ class AttendanceController extends Controller
 
         if ($attendance) {
             if ($attendance->is_check_in) {
-                notify()->error('You have already checked in today!');
-                return response()->json([
-                    'success' => false,
-                    'message' => 'You have already checked in today!'
-                ]);
+//                notify()->error('You have already checked in today!');
+//                return response()->json([
+//                    'success' => false,
+//                    'message' => 'You have already checked in today!'
+//                ]);
             }
 
             $attendance->user_id = $userId;
@@ -97,11 +97,11 @@ class AttendanceController extends Controller
         }
         $attendance->save();
 
-        notify()->success('Check-in Successful.');
-        return response()->json([
-            'success' => true,
-            'message' => 'Check-in Successful.'
-        ]);
+//        notify()->success('Check-in Successful.');
+//        return response()->json([
+//            'success' => true,
+//            'message' => 'Check-in Successful.'
+//        ]);
     }
 
     public function checkOut()
