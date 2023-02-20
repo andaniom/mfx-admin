@@ -91,7 +91,13 @@
             {{ $attendances->appends(request()->input())->links('components.pagination.custom') }}
         </div>
     </div>
-    <script>
+    <script type="text/javascript">
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
         // Get the clock element
         let clock = document.getElementById("liveClock");
 
@@ -104,23 +110,13 @@
         // Update the clock every 1000 milliseconds (1 second)
         setInterval(updateClock, 1000);
 
-        // Get the Check In button
-        let checkIn = document.getElementById("checkIn");
-
-        // Add a click events listener to the Check In button
-        checkIn.addEventListener("click", function () {
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-
+        $("#checkIn").click(function(e){
             $.ajax({
                 url: '/attendance/check-in',
                 method: 'post',
                 {{--data: {--}}
-                {{--    _token: '{{ csrf_token() }}'--}}
-                {{--},--}}
+                    {{--    _token: '{{ csrf_token() }}'--}}
+                    {{--},--}}
                 datatype: 'JSON',
                 success: function (response) {
                     console.log(response)
