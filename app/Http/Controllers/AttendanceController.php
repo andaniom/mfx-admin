@@ -57,7 +57,6 @@ class AttendanceController extends Controller
 
     public function checkIn()
     {
-        notify()->success('Check-in');
         $today = Carbon::today();
         $userId = auth()->id();
 
