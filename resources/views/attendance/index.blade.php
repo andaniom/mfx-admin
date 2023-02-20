@@ -110,7 +110,7 @@
         // Add a click events listener to the Check In button
         checkIn.addEventListener("click", function () {
             $.ajax({
-                url: '/attendance/checkin',
+                url: '/attendance/check-in',
                 method: 'post',
                 data: {
                     _token: '{{ csrf_token() }}'
@@ -142,28 +142,6 @@
                 error: function (response) {
                     // Handle the error response
                 }
-            });
-        });
-        $(document).ready(function () {
-            $("#searchButton").click(function () {
-                const startDate = $("#startDate").val();
-                const endDate = $("#endDate").val();
-
-                $.ajax({
-                    type: "GET",
-                    url: "/attendance",
-                    data: {
-                        start_date: startDate,
-                        end_date: endDate,
-                    },
-                    success: function (data) {
-                        // Handle the search result here
-                        // ...
-                    },
-                    error: function (error) {
-                        console.log(error);
-                    }
-                });
             });
         });
     </script>
