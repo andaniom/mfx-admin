@@ -112,8 +112,8 @@
 
         $("#checkIn").click(function(e){
             $.ajax({
-                url: '/attendance/check-in',
-                method: 'post',
+                url: '{{route('attendance.checkin')}}',
+                method: 'POST',
                 {{--data: {--}}
                     {{--    _token: '{{ csrf_token() }}'--}}
                     {{--},--}}
