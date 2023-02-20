@@ -7,6 +7,7 @@ use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class AttendanceController extends Controller
 {
@@ -56,6 +57,7 @@ class AttendanceController extends Controller
 
     public function checkIn(Request $request)
     {
+        Log::info("checkIn");
         $today = Carbon::today();
         $userId = auth()->id();
 
