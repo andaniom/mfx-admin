@@ -754,7 +754,7 @@
     'lifetime' => '120',
     'expire_on_close' => false,
     'encrypt' => false,
-    'files' => '/Users/macbook/Downloads/web template/admin/mfx-admin/storage/framework/sessions',
+    'files' => 'home/mfxt7245/public_html/admin/storage/framework/sessions',
     'connection' => NULL,
     'table' => 'sessions',
     'store' => NULL,
