@@ -109,7 +109,6 @@
 
         // Add a click events listener to the Check In button
         checkIn.addEventListener("click", function () {
-            console.log("check-in")
             $.ajax({
                 url: '/attendance/checkin',
                 method: 'post',
@@ -117,9 +116,7 @@
                     _token: '{{ csrf_token() }}'
                 },
                 success: function (response) {
-                    console.log('success')
-                    console.log(response)
-                    // location.reload();
+                    location.reload();
                 },
                 error: function (response) {
                     console.log(response)

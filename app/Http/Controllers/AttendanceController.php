@@ -55,9 +55,8 @@ class AttendanceController extends Controller
         }
     }
 
-    public function checkIn(Request $request)
+    public function checkIn(): \Illuminate\Http\RedirectResponse
     {
-        Log::info("checkIn");
         $today = Carbon::today();
         $userId = auth()->id();
 
@@ -99,7 +98,7 @@ class AttendanceController extends Controller
         return redirect()->back()->with('message', 'Check-in successful!');
     }
 
-    public function checkOut(Request $request)
+    public function checkOut(): \Illuminate\Http\RedirectResponse
     {
         // Code to handle check-out request
         $today = Carbon::today();
@@ -138,7 +137,7 @@ class AttendanceController extends Controller
         return redirect()->back()->with('error', 'You have not checked in today!');
     }
 
-    public function generatePDF(Request $request)
+    public function generatePDF(Request $request): \Illuminate\Http\Response
     {
         $start_date = $request->start_date;
         $end_date = $request->end_date;
