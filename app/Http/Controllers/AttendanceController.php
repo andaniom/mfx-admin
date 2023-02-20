@@ -57,45 +57,45 @@ class AttendanceController extends Controller
 
     public function checkIn()
     {
-//        $today = Carbon::today();
-//        $userId = auth()->id();
-//
-//        $attendance = Attendance::where('user_id', $userId)
-//            ->whereDate('date', $today)
-//            ->first();
-//
-//        $officeStart = '09:00:00';
-//        $isLate = Carbon::now()->toTimeString() > $officeStart;
-//        $late_time = null;
-//        if ($isLate) {
-//            $difference = strtotime(Carbon::now()->toTimeString()) - strtotime($officeStart);
-//            $late_time = $difference / 60;
-//        }
-//
-//        if ($attendance) {
-//            if ($attendance->is_check_in) {
-//                notify()->error('You have already checked in today!');
-//                return response()->json([
-//                    'success' => false,
-//                    'message' => 'You have already checked in today!'
-//                ]);
-//            }
-//
-//            $attendance->user_id = $userId;
-//            $attendance->check_in = Carbon::now()->toTimeString();
-//            $attendance->is_check_in = true;
-//            $attendance->is_late = $isLate;
-//            $attendance->late_time = $late_time;
-//        } else {
-//            $attendance = new Attendance;
-//            $attendance->user_id = $userId;
-//            $attendance->check_in = Carbon::now()->toTimeString();
-//            $attendance->is_check_in = true;
-//            $attendance->is_late = $isLate;
-//            $attendance->late_time = $late_time;
-//            $attendance->date = Carbon::now()->toDateString();
-//        }
-//        $attendance->save();
+        $today = Carbon::today();
+        $userId = auth()->id();
+
+        $attendance = Attendance::where('user_id', $userId)
+            ->whereDate('date', $today)
+            ->first();
+
+        $officeStart = '09:00:00';
+        $isLate = Carbon::now()->toTimeString() > $officeStart;
+        $late_time = null;
+        if ($isLate) {
+            $difference = strtotime(Carbon::now()->toTimeString()) - strtotime($officeStart);
+            $late_time = $difference / 60;
+        }
+
+        if ($attendance) {
+            if ($attendance->is_check_in) {
+                notify()->error('You have already checked in today!');
+                return response()->json([
+                    'success' => false,
+                    'message' => 'You have already checked in today!'
+                ]);
+            }
+
+            $attendance->user_id = $userId;
+            $attendance->check_in = Carbon::now()->toTimeString();
+            $attendance->is_check_in = true;
+            $attendance->is_late = $isLate;
+            $attendance->late_time = $late_time;
+        } else {
+            $attendance = new Attendance;
+            $attendance->user_id = $userId;
+            $attendance->check_in = Carbon::now()->toTimeString();
+            $attendance->is_check_in = true;
+            $attendance->is_late = $isLate;
+            $attendance->late_time = $late_time;
+            $attendance->date = Carbon::now()->toDateString();
+        }
+        $attendance->save();
 
         notify()->success('Check-in Successful.');
         return response()->json([

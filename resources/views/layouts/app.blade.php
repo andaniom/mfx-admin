@@ -19,17 +19,15 @@
     <link href="{{ url('/') }}/vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
 
     <script src="{{ url('/') }}/vendor/jquery/jquery.min.js"></script>
-
     <script src="{{ url('/') }}/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="{{ url('/') }}/vendor/jquery-easing/jquery.easing.min.js"></script>
-
     <script src="{{ url('/') }}/js/app.js"></script>
 
     <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
     @notifyCss
 
-    <x-head.tinymce-config/>
+{{--    <x-head.tinymce-config/>--}}
 </head>
 <body>
 <div id="wrapper">

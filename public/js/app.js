@@ -72,9 +72,12 @@ $(document).ready(function () {
 
     let span = document.getElementsByClassName("close-modal")[0];
 
-    span.onclick = function () {
+    // span.onclick = function () {
+    //     modal.style.display = "none";
+    // }
+    $('.close-modal').click(function () {
         modal.style.display = "none";
-    }
+    })
 
     $('#updateProgress').click(function () {
         const value = $(this).data('value');
