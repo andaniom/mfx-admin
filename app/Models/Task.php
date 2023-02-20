@@ -13,9 +13,15 @@ class Task extends Model
 {
     use HasFactory;
 
+    const STATUSES = [
+        'Pending',
+        'In Progress',
+        'Finished',
+    ];
+
     public static function create(array $data): bool
     {
-        return DB::table('task')->insert($data);
+        return DB::table('tasks')->insert($data);
     }
 
     public static function getStatus(int $status): string

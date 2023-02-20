@@ -6,44 +6,54 @@ Breadcrumbs::for('dashboard', function ($trail) {
     $trail->push('Dashboard', route('home.index'));
 });
 
-Breadcrumbs::for('user', function ($trail) {
+Breadcrumbs::for('users', function ($trail) {
     $trail->push('User', route('users.index'));
 });
 
-Breadcrumbs::for('event', function ($trail) {
+Breadcrumbs::for('events', function ($trail) {
     $trail->push('Event', route('events.index'));
 });
 
-Breadcrumbs::for('event-create', function ($trail) {
-    $trail->parent('event');
+Breadcrumbs::for('events-create', function ($trail) {
+    $trail->parent('events');
     $trail->push('Create', route('events.create'));
 });
 
-Breadcrumbs::for('event-view', function ($trail, $event) {
-    $trail->parent('event');
-    $trail->push($event->name, route('events.view', $event->id));
+Breadcrumbs::for('events-edit', function ($trail, $event) {
+    $trail->parent('events');
+    $trail->push('Edit', route('events.edit', $event));
 });
 
-Breadcrumbs::for('post', function ($trail) {
+Breadcrumbs::for('events-view', function ($trail, $event) {
+    $trail->parent('events');
+    $trail->push($event->name, route('events.show', $event->id));
+});
+
+Breadcrumbs::for('posts', function ($trail) {
     $trail->push('Post', route('posts.index'));
 });
 
-Breadcrumbs::for('post-create', function ($trail) {
-    $trail->parent('post');
+Breadcrumbs::for('posts-create', function ($trail) {
+    $trail->parent('posts');
     $trail->push('Create', route('posts.create'));
 });
 
-Breadcrumbs::for('post-view', function ($trail, $post) {
-    $trail->parent('post');
-    $trail->push($post->title, route('posts.view', $post->id));
+Breadcrumbs::for('posts-edit', function ($trail, $post) {
+    $trail->parent('posts');
+    $trail->push('Edit', route('posts.edit', $post));
 });
 
-Breadcrumbs::for('task', function ($trail) {
+Breadcrumbs::for('posts-view', function ($trail, $post) {
+    $trail->parent('posts');
+    $trail->push($post->title, route('posts.show', $post->id));
+});
+
+Breadcrumbs::for('tasks', function ($trail) {
     $trail->push('Task', route('tasks.index'));
 });
 
-Breadcrumbs::for('task-create', function ($trail) {
-    $trail->parent('task');
+Breadcrumbs::for('tasks-create', function ($trail) {
+    $trail->parent('tasks');
     $trail->push('Create', route('tasks.create'));
 });
 

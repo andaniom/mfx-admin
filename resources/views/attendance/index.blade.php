@@ -25,9 +25,9 @@
             @endif
             <div id="liveClock"></div>
             <div class="btns">
-                <button id="checkIn" class="btn btn-primary" {{ $is_check_in ? 'disabled' : '' }}>Check In
+                <button id="checkIn" class="btnClock btn btn-primary" {{ $is_check_in ? 'disabled' : '' }}>Check In
                 </button>
-                <button id="checkOut" class="btn btn-danger" {{ $is_check_out ? 'disabled' : ''}}>Check Out
+                <button id="checkOut" class="btnClock btn btn-danger" {{ $is_check_out ? 'disabled' : ''}}>Check Out
                 </button>
             </div>
         </div>
@@ -35,17 +35,19 @@
     </div>
     <div class="card shadow mb-4">
         <div class="card-body">
-            <form action="{{ route('attendance.index') }}" method="get">
-                @csrf
+            <form id="filterForm" action="{{route('attendance.index')}}" method="GET">
                 <div class="form-group">
                     <label for="start_date">Start Date:</label>
-                    <input type="date" name="start_date" class="form-control">
+                    <input id="start_date" type="date" name="start_date" value="{{ request()->input('start_date') }}"
+                           class="form-control">
                 </div>
                 <div class="form-group">
                     <label for="end_date">End Date:</label>
-                    <input type="date" name="end_date" class="form-control">
+                    <input id="end_date" type="date" name="end_date" value="{{ request()->input('end_date') }}"
+                           class="form-control">
                 </div>
-                <button type="submit" class="btn btn-primary">Filter</button>
+                <button type="submit" name="action" value="search" class="btn btn-primary">Search</button>
+                <button type="submit" name="action" value="download" class="btn btn-primary">Download</button>
             </form>
         </div>
         <div class="card-body">
@@ -60,24 +62,33 @@
                 </thead>
                 @foreach($attendances as $attendance)
                     <tbody
-                        style="{{($attendance->is_late || $attendance->is_early_out) ? 'background-color: yellow' : ''}}">
+                        @if(\App\Models\Attendance::isWeekend($attendance->date))
+                            class="attendance-holiday"
+                        @elseif($attendance->is_late || $attendance->is_early_out || !$attendance->is_check_in)
+                            class="attendance-over-time"
+                        @endif
+                    >
                     <tr>
                         <td>{{ date('l, d F Y', strtotime($attendance->date)) }}</td>
                         <td>{{ $attendance->check_in }}</td>
                         <td>{{ $attendance->check_out }}</td>
                         <td>
+                            @if(\App\Models\Attendance::isWeekend($attendance->date))
+                                <li>Holiday</li>
+                            @endif
                             @if($attendance->is_late)
                                 <li>Late {{\App\Models\Attendance::minutesToHourString($attendance->late_time)}}</li>
                             @endif
                             @if($attendance->is_early_out)
-                                <li>Early Out {{\App\Models\Attendance::minutesToHourString($attendance->early_out_time)}}</li>
+                                <li>Early
+                                    Out {{\App\Models\Attendance::minutesToHourString($attendance->early_out_time)}}</li>
                             @endif
                         </td>
                     </tr>
                     </tbody>
                 @endforeach
             </table>
-            {{ $attendances->links('components.pagination.custom') }}
+            {{ $attendances->appends(request()->input())->links('components.pagination.custom') }}
         </div>
     </div>
     <script>
@@ -96,7 +107,7 @@
         // Get the Check In button
         let checkIn = document.getElementById("checkIn");
 
-        // Add a click event listener to the Check In button
+        // Add a click events listener to the Check In button
         checkIn.addEventListener("click", function () {
             $.ajax({
                 url: '/attendance/checkin',
@@ -115,7 +126,7 @@
 
         let checkOut = document.getElementById("checkOut");
 
-        // Add a click event listener to the Check Out button
+        // Add a click events listener to the Check Out button
         checkOut.addEventListener("click", function () {
             $.ajax({
                 url: '/attendance/checkout',
@@ -129,6 +140,28 @@
                 error: function (response) {
                     // Handle the error response
                 }
+            });
+        });
+        $(document).ready(function () {
+            $("#searchButton").click(function () {
+                const startDate = $("#startDate").val();
+                const endDate = $("#endDate").val();
+
+                $.ajax({
+                    type: "GET",
+                    url: "/attendance",
+                    data: {
+                        start_date: startDate,
+                        end_date: endDate,
+                    },
+                    success: function (data) {
+                        // Handle the search result here
+                        // ...
+                    },
+                    error: function (error) {
+                        console.log(error);
+                    }
+                });
             });
         });
     </script>
@@ -159,7 +192,7 @@
             font-size: 36px;
         }
 
-        .btn {
+        .btnClock {
             width: 100px;
             padding: 10px;
             font-size: 16px;

@@ -19,7 +19,7 @@ return new class extends Migration
             $table->text('photo');
             $table->timestamp('date');
             $table->string('description');
-            $table->string('content');
+            $table->text('content');
             $table->integer('status')->default(0);
             $table->timestamps();
         });

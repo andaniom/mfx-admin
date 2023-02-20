@@ -12,6 +12,6 @@ class Event extends Model
 
     public static function create(array $data): bool
     {
-        return DB::table('event')->insert($data);
+        return DB::table('events')->insert($data);
     }
 }

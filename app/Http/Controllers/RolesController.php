@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -107,6 +108,11 @@ class RolesController extends Controller
         $role->update($request->only('name'));
 
         $role->syncPermissions($request->get('permission'));
+
+        $users = User::role($role->name)->get();
+        foreach ($users as $user){
+            $user->syncPermissions($role->permissions);
+        }
 
         return redirect()->route('roles.index')
             ->with('success','Role updated successfully');

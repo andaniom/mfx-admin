@@ -27,26 +27,27 @@
 
     <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+    @notifyCss
 
     <x-head.tinymce-config/>
 </head>
 <body>
 <div id="wrapper">
-
-    @if(Auth::check())
+    @auth
         @section('sidebar')
             <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
-                <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ url('login') }}">
+                <a class="sidebar-brand d-flex align-items-center justify-content-center"
+                   href="{{ route('home.index') }}">
                     <div class="sidebar-brand-icon rotate-n-15">
                         <i class="fas fa-laugh-wink"></i>
                     </div>
-                    <div class="sidebar-brand-text mx-3">MFX Admin <sup>2</sup></div>
+                    <div class="sidebar-brand-text mx-3">MFX Admin <sup>Billionaire</sup></div>
                 </a>
 
                 <hr class="sidebar-divider my-0">
 
-                <li class="nav-item {{ (request()->is('home')) ? 'active' : '' }}">
-                    <a class="nav-link" href="{{ url('/home') }}">
+                <li class="nav-item {{ (request()->is('/')) ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('home.index') }}">
                         <i class="fas fa-fw fa-tachometer-alt"></i>
                         <span>Dashboard</span></a>
                 </li>
@@ -69,13 +70,7 @@
 
                 <hr class="sidebar-divider my-0">
 
-                {{--                <li class="nav-item {{ (request()->is('events')) ? 'active' : '' }}">--}}
-                {{--                    <a class="nav-link" href="{{ url('/events') }}">--}}
-                {{--                        <i class="fas fa-fw fa-calendar-times"></i>--}}
-                {{--                        <span>Event</span></a>--}}
-                {{--                </li>--}}
-
-                @if(auth()->user()->checkPermission('admin'))
+                @role('Admin')
                     <hr class="sidebar-divider my-0">
                     <li class="nav-item ">
                         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
@@ -87,15 +82,21 @@
                              aria-labelledby="headingPages" data-parent="#accordionSidebar">
                             <div class="bg-white py-2 collapse-inner rounded">
                                 <a class="collapse-item {{ (request()->is('admin/users/*')) || (request()->is('admin/users')) ? 'active' : '' }}"
-                                   href="{{ url('admin/users') }}">Users</a>
+                                   href="{{ route('users.index') }}">Users</a>
                                 <a class="collapse-item {{ (request()->is('admin/posts')) || (request()->is('admin/posts/*')) ? 'active' : '' }}"
                                    href="{{ route('posts.index') }}">Posts</a>
                                 <a class="collapse-item {{ (request()->is('admin/events')) || (request()->is('admin/events/*')) ? 'active' : '' }}"
                                    href="{{ route('events.index') }}">Events</a>
+                                <a class="collapse-item {{ (request()->is('admin/attendance')) || (request()->is('admin/events/*')) ? 'active' : '' }}"
+                                   href="{{ route('attendance.admin') }}">Attendance</a>
+                                <a class="collapse-item {{ (request()->is('admin/role')) || (request()->is('admin/roles/*')) ? 'active' : '' }}"
+                                   href="{{ route('roles.index') }}">Roles</a>
                             </div>
                         </div>
                     </li>
-                @endif
+                @endrole
+
+
 
                 <hr class="sidebar-divider d-none d-md-block">
 
@@ -104,11 +105,10 @@
                 </div>
             </ul>
         @show
-    @endif
+    @endauth
     <div id="content-wrapper" class="d-flex flex-column">
         <div id="content">
-
-            @if(Auth::check())
+            @auth
                 @section('navbar')
                     <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
                         <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
@@ -282,7 +282,7 @@
                         </ul>
                     </nav>
                 @show
-            @endif
+            @endauth
 
             <div class="container-fluid">
                 @yield('content')
@@ -298,5 +298,11 @@
         </footer>
     </div>
 </div>
+@include('notify::components.notify')
+<x:notify-messages/>
+@notifyJs
 </body>
+@section("scripts")
+
+@show
 </html>

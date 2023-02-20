@@ -17,12 +17,18 @@ class EventController extends Controller
             $photos = explode(", ", $event->photo);
             $event->photo = $photos;
         }
-        return view('event.events', ['events' => $events]);
+        return view('events.index', ['events' => $events]);
     }
 
     public function create()
     {
-        return view('event.event-create');
+        return view('events.form');
+    }
+
+    public function edit(Event $event)
+    {
+        $event = $event;
+        return view('events.form', compact('event'));
     }
 
     /**
@@ -30,13 +36,13 @@ class EventController extends Controller
      */
     public function store(Request $request)
     {
-//        $this->validate($request, [
-//            'photo' => 'required|image|mimes:png,jpg,jpeg',
-//            'name' => 'required',
-//            'date' => 'required',
-//            'description' => 'required',
-//            'contentTiny' => 'required',
-//        ]);
+        $this->validate($request, [
+            'files' => 'required',
+            'name' => 'required',
+            'date' => 'required',
+            'description' => 'required',
+            'contentTiny' => 'required',
+        ]);
 
         $paths = [];
         //upload image
@@ -59,21 +65,23 @@ class EventController extends Controller
         ]);
 
         if ($event) {
-            return redirect()->route('events.index')->with(['success' => 'Data Berhasil Disimpan!']);
+            notify()->success($request->name . ', Event created successfully.');
+            return redirect()->route('events.index');
         } else {
-            return redirect()->route('events.index')->with(['error' => 'Data Gagal Disimpan!']);
+            notify()->error($request->name . ', Event created failed.');
+            return redirect()->route('events.index');
         }
     }
 
-    public function detail(Request $request, $key)
+    public function show(Request $request, $key)
     {
         $event = Event::find($key);
         $photos = explode(", ", $event->photo);
         $event->photo = $photos;
-        return view('event.event-detail', ['event' => $event]);
+        return view('events.show', ['event' => $event]);
     }
 
-    public function delete($key)
+    public function destroy($key)
     {
         $event = Event::find($key);
         $event->delete();
@@ -81,6 +89,44 @@ class EventController extends Controller
             return redirect()->route('events.index')->with(['success' => 'Data Berhasil Dihapus!']);
         } else {
             return redirect()->route('events.index')->with(['error' => 'Data Gagal Dihapus!']);
+        }
+    }
+
+    public function update(Request $request, Event $event)
+    {
+        $this->validate($request, [
+            'files' => 'required',
+            'name' => 'required',
+            'date' => 'required',
+            'description' => 'required',
+            'contentTiny' => 'required',
+        ]);
+
+        $paths = [];
+        //upload image
+        if ($request->hasFile('files')) {
+            $files = $request->file('files');
+            foreach ($files as $file) {
+                $file->storeAs('public/events', $file->hashName());
+                $paths[] = $file->hashName();
+            }
+        }
+
+        $content = $request->contentTiny;
+
+        $event->photo = implode(', ', $paths);
+        $event->name = $request->name;
+        $event->description = $request->description;
+        $event->date = $request->date;
+        $event->content = $content;
+        $event->save();
+
+        if ($event) {
+            notify()->success($request->name . ', Event created successfully.');
+            return redirect()->route('events.index');
+        } else {
+            notify()->error($request->name . ', Event created failed.');
+            return redirect()->route('events.index');
         }
     }
 }

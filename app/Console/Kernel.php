@@ -4,21 +4,29 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Illuminate\Support\Facades\Log;
 
 class Kernel extends ConsoleKernel
 {
+    protected $commands = [
+        'App\Console\Commands\AttendanceJob',
+        'App\Console\Commands\CreateRoutePermissionsCommand',
+    ];
+
     /**
      * Define the application's command schedule.
      *
      * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
      * @return void
      */
+
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+        Log::info("schedule run");
         $schedule->command('attendance:job')
-            ->everyMinute();
-//            ->dailyAt('11:06');
+            ->dailyAt('01:00');
+        $schedule->command('create-permission-routes')
+            ->dailyAt('01:00');
     }
 
     /**

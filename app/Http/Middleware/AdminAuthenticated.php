@@ -22,19 +22,19 @@ class AdminAuthenticated
             /** @var User $user */
             $user = Auth::user();
 
-            // if user is not admin take him to his dashboard
-            if ( $user->hasRole('user') ) {
-                return redirect(route('home.index'));
-            }
-
-            // allow admin to proceed with request
-            else if ( $user->hasRole('admin') ) {
-                return $next($request);
-            }
-
-            else if ( $user->hasRole('super_admin') ) {
-                return $next($request);
-            }
+            // if users is not admin take him to his dashboard
+//            if ( $users->hasRole('users') ) {
+//                return redirect(route('home.index'));
+//            }
+//
+//            // allow admin to proceed with request
+//            else if ( $users->hasRole('admin') ) {
+//                return $next($request);
+//            }
+//
+//            else if ( $users->hasRole('super_admin') ) {
+//                return $next($request);
+//            }
         }
 
         abort(403);  // permission denied error

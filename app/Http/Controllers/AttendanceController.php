@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Attendance;
+use App\Models\User;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 
@@ -17,33 +19,39 @@ class AttendanceController extends Controller
         $start_date = $request->start_date;
         $end_date = $request->end_date;
 
-        $attendance = Attendance::where('user_id', auth()->id());
+        $attendances = Attendance::where('user_id', auth()->id());
 
         if ($start_date) {
-            $attendance = $attendance->whereDate('date', '>=', $start_date);
+            $attendances = $attendances->whereDate('date', '>=', $start_date);
         }
 
         if ($end_date) {
-            $attendance = $attendance->whereDate('date', '<=', $end_date);
+            $attendances = $attendances->whereDate('date', '<=', $end_date);
         }
 
-        $attendances = $attendance->orderBy('date', 'DESC')->paginate(5);
+        $attendances = $attendances->orderBy('date', 'DESC')->paginate(5);
 
-        $attendance = Attendance::where('user_id', $userId)
-            ->whereDate('date', $today)
-            ->first();
+        if ($request->input('action') == "download") {
+            $pdf = PDF::loadView('attendance.attendance_summary_pdf', compact('attendances'));
+            return $pdf->download('attendance_summary_' . auth()->user()->name . '.pdf');
+        } else {
+            $attendance = Attendance::where('user_id', $userId)
+                ->whereDate('date', $today)
+                ->first();
 
-        $is_check_in = true;
-        $is_check_out = true;
-        if ($attendance) {
-            if (!$attendance->is_check_in) {
+            $is_check_in = true;
+            $is_check_out = true;
+            if ($attendance) {
+                if (!$attendance->is_check_in) {
+                    $is_check_in = false;
+                } else if (!$attendance->is_check_out) {
+                    $is_check_out = false;
+                }
+            } else {
                 $is_check_in = false;
-            } else if (!$attendance->is_check_out) {
-                $is_check_out = false;
             }
+            return view('attendance.index', compact('attendances', 'is_check_in', 'is_check_out'));
         }
-
-        return view('attendance.index', compact('attendances', 'is_check_in', 'is_check_out'));
     }
 
     public function checkIn(Request $request)
@@ -55,28 +63,35 @@ class AttendanceController extends Controller
             ->whereDate('date', $today)
             ->first();
 
+        $officeStart = '09:00:00';
+        $isLate = Carbon::now()->toTimeString() > $officeStart;
+        $late_time = null;
+        if ($isLate) {
+            $difference = strtotime(Carbon::now()->toTimeString()) - strtotime($officeStart);
+            $late_time = $difference / 60;
+        }
+
         if ($attendance) {
             if ($attendance->is_check_in) {
                 session()->flash('error', 'You have already checked in today!');
                 return redirect()->back()->with('error', 'You have already checked in today!');
             }
-            $officeStart = '09:00:00';
-            $isLate = Carbon::now()->toTimeString() > $officeStart;
-            $late_time = null;
-            if ($isLate) {
-                $difference = strtotime(Carbon::now()->toTimeString()) - strtotime($officeStart);
-                $late_time = $difference / 60;
-            }
 
-            $attendance->user_id = auth()->id();
+            $attendance->user_id = $userId;
             $attendance->check_in = Carbon::now()->toTimeString();
             $attendance->is_check_in = true;
             $attendance->is_late = $isLate;
             $attendance->late_time = $late_time;
             $attendance->save();
         } else {
-            session()->flash('error', 'You have already checked in today!');
-            return redirect()->back()->with('error', 'You have already checked in today!');
+            $attendance = new Attendance;
+            $attendance->user_id = $userId;
+            $attendance->check_in = Carbon::now()->toTimeString();
+            $attendance->is_check_in = true;
+            $attendance->is_late = $isLate;
+            $attendance->late_time = $late_time;
+            $attendance->date = Carbon::now()->toDateString();
+            $attendance->save();
         }
 
         session()->flash('success', 'Check-in Successful');
@@ -120,5 +135,69 @@ class AttendanceController extends Controller
 
         session()->flash('success', 'Check-out Successful');
         return redirect()->back()->with('error', 'You have not checked in today!');
+    }
+
+    public function generatePDF(Request $request)
+    {
+        $start_date = $request->start_date;
+        $end_date = $request->end_date;
+
+        $attendances = Attendance::where('user_id', auth()->id());
+
+        if ($start_date) {
+            $attendances = $attendances->whereDate('date', '>=', $start_date);
+        }
+
+        if ($end_date) {
+            $attendances = $attendances->whereDate('date', '<=', $end_date);
+        }
+
+        $attendances = $attendances->orderBy('date', 'DESC');
+
+        $pdf = PDF::loadView('attendance.attendance_summary_pdf', compact('attendances'));
+        return $pdf->download('attendance_summary.pdf');
+    }
+
+    private function generateAttendanceSummaryPdf($attendances): string
+    {
+        $pdf = PDF::loadView('attendance.attendance_summary_pdf', ['attendances' => $attendances]);
+        $pdfFilePath = storage_path('app/public/attendance_summary.pdf');
+        $pdf->save($pdfFilePath);
+
+        return $pdfFilePath;
+    }
+
+    public function admin(Request $request)
+    {
+        $users = User::all();
+
+        $start_date = $request->start_date;
+        $end_date = $request->end_date;
+        $userId = $request->user_id;
+
+        $attendances = Attendance::query();
+
+//        if (!$userId) {
+//            $users[0];
+//        }
+
+        $attendances = $attendances->where('user_id', $userId);
+
+        if ($start_date) {
+            $attendances = $attendances->whereDate('date', '>=', $start_date);
+        }
+
+        if ($end_date) {
+            $attendances = $attendances->whereDate('date', '<=', $end_date);
+        }
+
+        $attendances = $attendances->orderBy('date', 'DESC')->paginate(5);
+
+        if ($request->input('action') == "download") {
+            $pdf = PDF::loadView('attendance.attendance_summary_pdf', compact('attendances'));
+            return $pdf->download('attendance_summary_' . auth()->user()->name . '.pdf');
+        } else {
+            return view('attendance.admin', compact('users', 'attendances'));
+        }
     }
 }

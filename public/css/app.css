@@ -93,3 +93,18 @@
     text-align: center;
     line-height: 1.6em;
 }
+
+.accordionSidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    overflow: scroll;
+}
+
+.attendance-over-time {
+    background-color: yellow;
+}
+
+.attendance-holiday {
+    background-color: #a4a3a3;
+}

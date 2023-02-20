@@ -19,4 +19,8 @@ class Attendance extends Model
         $minutes = $minutes % 60;
         return "$hours hours  $minutes minutes";
     }
+
+    public static function isWeekend($date): bool {
+        return (date('N', strtotime($date)) >= 6);
+    }
 }
