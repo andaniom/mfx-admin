@@ -27,7 +27,7 @@
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
     @notifyCss
 
-{{--    <x-head.tinymce-config/>--}}
+    {{--    <x-head.tinymce-config/>--}}
 </head>
 <body>
 <div id="wrapper">
@@ -42,58 +42,71 @@
                     <div class="sidebar-brand-text mx-3">MFX Admin <sup>Billionaire</sup></div>
                 </a>
 
-                <hr class="sidebar-divider my-0">
+                @can('home.index')
+                    <hr class="sidebar-divider my-0">
+                    <li class="nav-item {{ (request()->is('/')) ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ route('home.index') }}">
+                            <i class="fas fa-fw fa-tachometer-alt"></i>
+                            <span>Dashboard</span></a>
+                    </li>
+                @endcan
 
-                <li class="nav-item {{ (request()->is('/')) ? 'active' : '' }}">
-                    <a class="nav-link" href="{{ route('home.index') }}">
-                        <i class="fas fa-fw fa-tachometer-alt"></i>
-                        <span>Dashboard</span></a>
-                </li>
 
-                <hr class="sidebar-divider my-0">
+                @can('tasks.index')
+                    <hr class="sidebar-divider my-0">
+                    <li class="nav-item {{ (request()->is('tasks')) ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ url('/tasks') }}">
+                            <i class="fas fa-fw fa-clipboard-list"></i>
+                            <span>Task</span></a>
+                    </li>
+                @endcan
 
-                <li class="nav-item {{ (request()->is('tasks')) ? 'active' : '' }}">
-                    <a class="nav-link" href="{{ url('/tasks') }}">
-                        <i class="fas fa-fw fa-clipboard-list"></i>
-                        <span>Task</span></a>
-                </li>
-
-                <hr class="sidebar-divider my-0">
-
-                <li class="nav-item {{ (request()->is('attendance')) ? 'active' : '' }}">
-                    <a class="nav-link" href="{{ url('/attendance') }}">
-                        <i class="fas fa-fw fa-calendar"></i>
-                        <span>Attendance</span></a>
-                </li>
+                @can('attendance.index')
+                    <hr class="sidebar-divider my-0">
+                    <li class="nav-item {{ (request()->is('attendance')) ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ url('/attendance') }}">
+                            <i class="fas fa-fw fa-calendar"></i>
+                            <span>Attendance</span></a>
+                    </li>
+                @endcan
 
                 <hr class="sidebar-divider my-0">
 
                 @role('admin')
-                    <hr class="sidebar-divider my-0">
-                    <li class="nav-item ">
-                        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
-                           aria-expanded="true" aria-controls="collapsePages">
-                            <i class="fas fa-fw fa-folder"></i>
-                            <span>Admin</span>
-                        </a>
-                        <div id="collapsePages" class="collapse {{ (request()->is('admin/*')) ? 'show' : '' }}"
-                             aria-labelledby="headingPages" data-parent="#accordionSidebar">
-                            <div class="bg-white py-2 collapse-inner rounded">
+                <hr class="sidebar-divider my-0">
+                <li class="nav-item ">
+                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
+                       aria-expanded="true" aria-controls="collapsePages">
+                        <i class="fas fa-fw fa-folder"></i>
+                        <span>Admin</span>
+                    </a>
+                    <div id="collapsePages" class="collapse {{ (request()->is('admin/*')) ? 'show' : '' }}"
+                         aria-labelledby="headingPages" data-parent="#accordionSidebar">
+                        <div class="bg-white py-2 collapse-inner rounded">
+                            @can('users.index')
                                 <a class="collapse-item {{ (request()->is('admin/users/*')) || (request()->is('admin/users')) ? 'active' : '' }}"
-                                   href="{{ route('users.index') }}">Users</a>
+                                   href="{{ route('users.index') }}">Users Management</a>
+                            @endcan
+                            @can('attendance.admin')
+                                <a class="collapse-item {{ (request()->is('admin/attendance')) || (request()->is('admin/events/*')) ? 'active' : '' }}"
+                                   href="{{ route('attendance.admin') }}">Attendance Management</a>
+                            @endcan
+                            @can('posts.index')
                                 <a class="collapse-item {{ (request()->is('admin/posts')) || (request()->is('admin/posts/*')) ? 'active' : '' }}"
                                    href="{{ route('posts.index') }}">Posts</a>
+                            @endcan
+                            @can('events.index')
                                 <a class="collapse-item {{ (request()->is('admin/events')) || (request()->is('admin/events/*')) ? 'active' : '' }}"
                                    href="{{ route('events.index') }}">Events</a>
-                                <a class="collapse-item {{ (request()->is('admin/attendance')) || (request()->is('admin/events/*')) ? 'active' : '' }}"
-                                   href="{{ route('attendance.admin') }}">Attendance</a>
+                            @endcan
+                            @can('roles.index')
                                 <a class="collapse-item {{ (request()->is('admin/role')) || (request()->is('admin/roles/*')) ? 'active' : '' }}"
                                    href="{{ route('roles.index') }}">Roles</a>
-                            </div>
+                            @endcan
                         </div>
-                    </li>
+                    </div>
+                </li>
                 @endrole
-
 
 
                 <hr class="sidebar-divider d-none d-md-block">

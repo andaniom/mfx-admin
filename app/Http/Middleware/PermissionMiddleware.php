@@ -17,13 +17,13 @@ class PermissionMiddleware
             throw UnauthorizedException::notLoggedIn();
         }
 
-        if (! is_null($permission)) {
+        if (!is_null($permission)) {
             $permissions = is_array($permission)
                 ? $permission
                 : explode('|', $permission);
         }
 
-        if ( is_null($permission) ) {
+        if (is_null($permission)) {
             $permission = $request->route()->getName();
 
             $permissions = array($permission);
@@ -35,7 +35,11 @@ class PermissionMiddleware
                 return $next($request);
             }
         }
+        return response()->view("errors.index", [
+            "message" => "USER DOES NOT HAVE THE RIGHT PERMISSIONS.",
+            'errorCode' => 403
+        ], 403);
 
-        throw UnauthorizedException::forPermissions($permissions);
+//        throw UnauthorizedException::forPermissions($permissions);
     }
 }
