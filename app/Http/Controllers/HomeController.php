@@ -57,9 +57,9 @@ class HomeController extends Controller
             ->groupBy('user_id')->count();
 
         $leaderboard = Transaction::select(
-                DB::raw('users.name'),
-                DB::raw('sum(amount) as `total_amount`')
-            )
+            DB::raw('users.name'),
+            DB::raw('sum(amount) as `total_amount`')
+        )
             ->leftJoin('users', 'transactions.user_id', '=', 'users.id')
             ->groupBy('user_id')
             ->groupBy('users.name')
@@ -68,9 +68,9 @@ class HomeController extends Controller
             ->get();
 
         $deposit = Transaction::select(
-                DB::raw("DATE_FORMAT(created_at, '%m') as month"),
-                DB::raw('sum(amount) as `total_amount`')
-            )
+            DB::raw("DATE_FORMAT(created_at, '%m') as month"),
+            DB::raw('sum(amount) as `total_amount`')
+        )
             ->where('amount', '>', 0)
             ->where('user_id', auth()->id())
             ->whereYear('created_at', Carbon::now()->year)
@@ -80,9 +80,9 @@ class HomeController extends Controller
             ->get();
 
         $withdrawal = Transaction::select(
-                DB::raw("DATE_FORMAT(created_at, '%m') as month"),
-                DB::raw('sum(amount) as `total_amount`')
-            )
+            DB::raw("DATE_FORMAT(created_at, '%m') as month"),
+            DB::raw('sum(amount) as `total_amount`')
+        )
             ->where('amount', '<', 0)
             ->where('user_id', auth()->id())
             ->whereYear('created_at', Carbon::now()->year)
@@ -97,11 +97,11 @@ class HomeController extends Controller
         $result = new Transaction();
         $result->count = $count;
         $result->progress = $progress;
-        $result->totalAmount = $totalAmount->total_amount;
+        $result->totalAmount = $totalAmount ? $totalAmount->total_amount : 0;
         $result->count = $count;
-        $result->totalAmountMonth = $totalAmountMonth->total_amount;
+        $result->totalAmountMonth = $totalAmountMonth ? $totalAmountMonth->total_amount : 0;
         $result->countMonth = $countMonth;
-        $result->reward = $totalAmountMonth->total_amount * ($reward / 100);
+        $result->reward = $totalAmountMonth ? $totalAmountMonth->total_amount * ($reward / 100) : 0;
         $result->leaderboard = $leaderboard;
         $result->deposit = $deposit;
         $result->withdrawal = $withdrawal;
