@@ -16,6 +16,8 @@ class CustomerController extends Controller
             ->where('customers.user_id', auth()->id())
             ->groupBy('customers.id')
             ->groupBy('customers.user_id')
+            ->groupBy('customers.name')
+            ->groupBy('customers.phone_number')
             ->paginate(5);
         return view('customers.index', compact('customers'));
     }
