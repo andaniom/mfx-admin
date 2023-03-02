@@ -14,7 +14,7 @@
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
 
-{{--    <link href="{{ url('/') }}/css/sb-admin-2.css" rel="stylesheet">--}}
+    <link href="{{ url('/') }}/css/sb-admin-2.css" rel="stylesheet">
     <link href="{{ url('/') }}/css/sb-admin-2.min.css" rel="stylesheet">
     <link href="{{ url('/') }}/css/app.css" rel="stylesheet">
     <link href="{{ url('/') }}/vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
