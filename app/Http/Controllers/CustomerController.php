@@ -11,8 +11,8 @@ class CustomerController extends Controller
     public function index()
     {
 //        $customers = Customer::where('user_id', auth()->id())->orderBy('id')->paginate(5);
-        $customers = Customer::select('customers.id, customers.user_id, customers.name, customers.phone_number'
-            , DB::raw('SUM(transactions.amount) as amount'))
+        $customers = Customer::select('customers.id', 'customers.user_id', 'customers.name', 'customers.phone_number',
+            DB::raw('SUM(transactions.amount) as amount'))
             ->leftJoin('transactions', 'transactions.customer_id', '=', 'customers.id')
             ->where('customers.user_id', auth()->id())
             ->groupBy('customers.id')
@@ -62,6 +62,6 @@ class CustomerController extends Controller
 
         notify()->success($customer->name . ', updated successfully.');
         return redirect()->route('customers.index')
-            ->with('success','Setting updated successfully');
+            ->with('success', 'Setting updated successfully');
     }
 }
