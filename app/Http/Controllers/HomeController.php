@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Customer;
 use App\Models\Setting;
 use App\Models\Task;
 use App\Models\Transaction;
@@ -45,13 +46,13 @@ class HomeController extends Controller
 
         $totalAmount = Transaction::select(DB::raw('SUM(amount) as total_amount'))
             ->where('user_id', auth()->id())
-            ->groupBy('user_id')->groupBy('customer_id')->first();
+            ->groupBy('user_id')->first();
         $count = Transaction::where('user_id', auth()->id())
             ->groupBy('user_id')->count();
         $totalAmountMonth = Transaction::select(DB::raw('SUM(amount) as total_amount'))
             ->where('user_id', auth()->id())
             ->whereMonth('created_at', Carbon::now()->month)
-            ->groupBy('user_id')->groupBy('customer_id')->first();
+            ->groupBy('user_id')->first();
         $countMonth = Transaction::where('user_id', auth()->id())
             ->whereMonth('created_at', Carbon::now()->month)
             ->groupBy('user_id')->count();
@@ -91,6 +92,8 @@ class HomeController extends Controller
             ->orderBy('month')
             ->get();
 
+        $customers = Customer::where('user_id', auth()->id())->count();
+
         $setting = Setting::where("name", 'reward')->first();;
         $reward = $setting != null ? $setting->value : '0';
 
@@ -105,6 +108,7 @@ class HomeController extends Controller
         $result->leaderboard = $leaderboard;
         $result->deposit = $deposit;
         $result->withdrawal = $withdrawal;
+        $result->customers = $customers;
 
         return view('home', compact('result'));
     }

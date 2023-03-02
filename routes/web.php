@@ -92,6 +92,7 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
         Route::group(['prefix' => 'transactions'], function() {
             Route::post('/{customer}', 'TransactionController@store')->name('transactions.store');
             Route::get('/{customer}', 'TransactionController@index')->name('transactions.index');
+            Route::get('/{customer}/{user}', 'TransactionController@admin')->name('transactions.admin');
         });
 
         Route::resource('roles', RolesController::class);

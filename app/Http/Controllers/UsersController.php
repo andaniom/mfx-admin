@@ -5,10 +5,14 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\Customer;
+use App\Models\Setting;
+use App\Models\Transaction;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Spatie\Permission\Models\Role;
 
 class UsersController extends Controller
@@ -58,10 +62,18 @@ class UsersController extends Controller
             ->groupBy('customers.name')
             ->groupBy('customers.phone_number')
             ->paginate(5);
-        return view('users.show', [
-            'user' => $user,
-            'customers' => $customers
-        ]);
+
+        $totalAmountMonth = Transaction::select(DB::raw('SUM(amount) as total_amount'))
+            ->where('user_id', $user->id)
+            ->whereMonth('created_at', Carbon::now()->month)
+            ->groupBy('user_id')->first();
+
+        $setting = Setting::where("name", 'reward')->first();;
+        $reward = $setting != null ? $setting->value : '0';
+
+        $reward = $totalAmountMonth ? $totalAmountMonth->total_amount * ($reward / 100) : 0;
+
+        return view('users.show', compact('user', 'customers', 'reward'));
     }
 
     public function showProfile(User $user)
