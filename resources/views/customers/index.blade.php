@@ -70,15 +70,55 @@
                             <td>
                                 <div class="d-flex flex-col">
                                     <a data-toggle="modal"
-                                       data-target="#{{str_replace(" ", "", $customer->name)}}-modal"
+                                       data-target="#{{str_replace(" ", "", $customer->name)}}-order-modal"
                                        style="width: 100px"
                                        class="btn btn-info btn-sm mt-1">Order</a>
                                     <a style="width: 100px" class="btn btn-info btn-sm mt-1"
                                        href="{{route('transactions.index', $customer->id)}}">History</a>
-                                    <a style="width: 100px" class="btn btn-info btn-sm mt-1">Edit</a>
+                                    <a data-toggle="modal"
+                                       data-target="#{{str_replace(" ", "", $customer->name)}}-edit-modal"
+                                       style="width: 100px" class="btn btn-info btn-sm mt-1">Edit</a>
                                 </div>
 
-                                <div class="modal fade" id="{{str_replace(" ", "", $customer->name)}}-modal"
+                                <div class="modal fade" id="{{str_replace(" ", "", $customer->name)}}-edit-modal" tabindex="-1" role="dialog" aria-labelledby="customerModalLabel"
+                                     aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="customerModalLabel">Customer</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form method="post" action="{{ route('customers.update', $customer->id) }}">
+                                                    @csrf
+                                                    @method('PATCH')
+                                                    <div class="form-group">
+                                                        <label for="name" class="col-form-label">Name:</label>
+                                                        <input type="text" class="form-control" id="name" name="name"
+                                                               value="{{$customer->name}}"
+                                                               required>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="phone_number" class="col-form-label">Phone Number:</label>
+                                                        <input id="phone_number" type="text"
+                                                               class="form-control phone @error('phone_number') is-invalid @enderror"
+                                                               name="phone_number" required
+                                                               value="{{$customer->phone_number}}"
+                                                               autocomplete="phone_number" autofocus placeholder="+62 000-0000-00000">
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="modal fade" id="{{str_replace(" ", "", $customer->name)}}-order-modal"
                                      role="dialog" aria-hidden="true">
                                     <div class="modal-dialog" role="document">
                                         <div class="modal-content">

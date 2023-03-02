@@ -45,4 +45,18 @@ class CustomerController extends Controller
         }
         return redirect()->back();
     }
+
+    public function update(Customer $customer, Request $request)
+    {
+        $this->validate($request, [
+            'name' => 'required',
+            'phone_number' => 'required',
+        ]);
+
+        $customer->update($request->only('name', 'phone_number'));
+
+        notify()->success($customer->name . ', updated successfully.');
+        return redirect()->route('customers.index')
+            ->with('success','Setting updated successfully');
+    }
 }
