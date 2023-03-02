@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
+use App\Models\Customer;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -47,8 +48,10 @@ class UsersController extends Controller
 
     public function show(User $user)
     {
+        $customers = Customer::where('user_id', $user->id)->paginate(5);
         return view('users.show', [
-            'user' => $user
+            'user' => $user,
+            'customers' => $customers
         ]);
     }
 

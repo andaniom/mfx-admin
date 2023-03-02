@@ -298,7 +298,7 @@
                     }
                 },
                 scales: {
-                    x: [{
+                    xAxes: [{
                         time: {
                             unit: 'date'
                         },
@@ -310,8 +310,9 @@
                             maxTicksLimit: 7
                         }
                     }],
-                    y: [{
+                    yAxes: [{
                         ticks: {
+                            min : 0,
                             maxTicksLimit: 5,
                             padding: 10,
                             // Include a dollar sign in the ticks

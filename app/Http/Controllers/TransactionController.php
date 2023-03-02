@@ -61,11 +61,11 @@ class TransactionController extends Controller
         $result = new Transaction();
         $result->transactions = $transactions;
         $result->customer = $customer;
-        $result->totalAmount = $totalAmount->total_amount;
+        $result->totalAmount = $totalAmount ? $totalAmount->total_amount : 0;
         $result->count = $count;
-        $result->totalAmountMonth = $totalAmountMonth->total_amount;
+        $result->totalAmountMonth = $totalAmountMonth ? $totalAmountMonth->total_amount : 0;
         $result->countMonth = $countMonth;
-        $result->reward = $totalAmount->total_amount * ($reward / 100);
+        $result->reward = $totalAmount ? $totalAmount->total_amount * ($reward / 100) : 0;
         return view('transactions.index', compact('result'));
     }
 }
