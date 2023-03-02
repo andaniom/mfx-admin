@@ -62,6 +62,7 @@ class HomeController extends Controller
             )
             ->leftJoin('users', 'transactions.user_id', '=', 'users.id')
             ->groupBy('user_id')
+            ->groupBy('users.name')
             ->groupBy(DB::raw("DATE_FORMAT(transactions.created_at, '%Y')"))
             ->orderBy('total_amount', 'desc')
             ->get();
