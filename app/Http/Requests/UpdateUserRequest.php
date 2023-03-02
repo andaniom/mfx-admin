@@ -23,11 +23,12 @@ class UpdateUserRequest extends FormRequest
      */
     public function rules()
     {
-        $user = request()->route('users');
+        $userId = request()->route('userId');
 
         return [
             'name' => 'required',
-//            'email' => 'required|email:rfc,dns|unique:users,email,'.$user->id,
+            'phone_number' => 'required',
+//            'email' => 'required|email:rfc,dns|unique:users,email,'.$userId,
         ];
     }
 }

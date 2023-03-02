@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Attendance;
+use App\Models\Setting;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
@@ -55,8 +56,9 @@ class AttendanceController extends Controller
         }
     }
 
-    public function checkIn()
+    public function checkIn(Request $request)
     {
+        $this->checkDistance($request);
         $today = Carbon::today();
         $userId = auth()->id();
 
@@ -64,7 +66,8 @@ class AttendanceController extends Controller
             ->whereDate('date', $today)
             ->first();
 
-        $officeStart = '09:00:00';
+        $setting = Setting::where("name", 'check-in-time')->first();;
+        $officeStart = $setting != null ? $setting->value : '09:00:00';
         $isLate = Carbon::now()->toTimeString() > $officeStart;
         $late_time = null;
         if ($isLate) {
@@ -97,15 +100,16 @@ class AttendanceController extends Controller
         }
         $attendance->save();
 
-//        notify()->success('Check-in Successful.');
-//        return response()->json([
-//            'success' => true,
-//            'message' => 'Check-in Successful.'
-//        ]);
+        notify()->success('Check-in Successful.');
+        return response()->json([
+            'success' => true,
+            'message' => 'Check-in Successful.'
+        ]);
     }
 
-    public function checkOut()
+    public function checkOut(Request $request)
     {
+        $this->checkDistance($request);
         // Code to handle check-out request
         $today = Carbon::today();
         $userId = auth()->id();
@@ -130,7 +134,8 @@ class AttendanceController extends Controller
                 ]);
             }
 
-            $officeEnd = '17:00:00';
+            $setting = Setting::where("name", 'check-out-time')->first();
+            $officeEnd = $setting != null ? $setting->value : '17:00:00';
             $isEarlyOut = Carbon::now()->toTimeString() < $officeEnd;
             $earlyOutTime = null;
             if ($isEarlyOut) {
@@ -150,6 +155,23 @@ class AttendanceController extends Controller
             'success' => true,
             'message' => 'Check-out Successful'
         ]);
+    }
+
+    public function checkDistance(Request $request) {
+        $settingLatitude = Setting::where("name", 'latitude')->first();;
+        $settingLongitude = Setting::where("name", 'longitude')->first();;
+        $latitudeFrom = $request->latitude;
+        $longitudeFrom = $request->longitude;
+        $latitudeTo = $settingLatitude->value;
+        $longitudeTo = $settingLongitude->value;
+        $distance = $this->getDistance($latitudeFrom, $longitudeFrom, $latitudeTo, $longitudeTo);
+        if ($distance > 1) {
+            notify()->error('Not in area');
+            return response()->json([
+                'success' => false,
+                'message' => 'Not in area'
+            ]);
+        }
     }
 
     public function generatePDF(Request $request): \Illuminate\Http\Response
@@ -214,5 +236,49 @@ class AttendanceController extends Controller
         } else {
             return view('attendance.admin', compact('users', 'attendances'));
         }
+    }
+
+    function calculateDistanceBetweenTwoAddresses($latitudeFrom, $longitudeFrom,
+                                                  $latitudeTo, $longitudeTo)
+    {
+        $long1 = deg2rad($longitudeFrom);
+        $long2 = deg2rad($longitudeTo);
+        $lat1 = deg2rad($latitudeFrom);
+        $lat2 = deg2rad($latitudeTo);
+
+        //Haversine Formula
+        $dlong = $long2 - $long1;
+        $dlati = $lat2 - $lat1;
+
+        $val = pow(sin($dlati / 2), 2) + cos($lat1) * cos($lat2) * pow(sin($dlong / 2), 2);
+
+        $res = 2 * asin(sqrt($val));
+
+        $radius = 3958.756;
+
+        Log::info($res * $radius);
+        return ($res * $radius);
+    }
+
+    function getDistance($lat1, $lon1, $lat2, $lon2)
+    {
+        Log::info($lat1);
+        Log::info($lon1);
+        Log::info($lat2);
+        Log::info($lon2);
+        $radius = 6371; // Earth's radius in km
+
+        $dLat = deg2rad($lat2 - $lat1);
+        $dLon = deg2rad($lon2 - $lon1);
+
+        $a = sin($dLat / 2) * sin($dLat / 2) +
+            cos(deg2rad($lat1)) * cos(deg2rad($lat2)) *
+            sin($dLon / 2) * sin($dLon / 2);
+
+        $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
+
+        $distance = $radius * $c; // distance between two points in km
+        Log::info($distance);
+        return $distance;
     }
 }

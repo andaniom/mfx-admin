@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('scripts')
+    <x-head.tinymce-config/>
+@endsection
+
 @section('title', 'Post')
 
 @section('content')
@@ -13,7 +17,8 @@
             <h6 class="m-0 font-weight-bold text-primary">{{ isset($post) ? 'Edit Post' : 'Create Post' }}</h6>
         </div>
         <div class="card-body">
-            <form action="{{  isset($post) ? route('posts.update', $post->id) : route('posts.store') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{  isset($post) ? route('posts.update', $post->id) : route('posts.store') }}" method="POST"
+                  enctype="multipart/form-data">
                 @if(isset($post))
                     @method('PATCH')
                 @endif

@@ -60,3 +60,19 @@ Breadcrumbs::for('tasks-create', function ($trail) {
 Breadcrumbs::for('attendance', function ($trail) {
     $trail->push('Attendance', route('attendance.index'));
 });
+
+Breadcrumbs::for('roles', function ($trail) {
+    $trail->push('Role', route('roles.index'));
+});
+
+Breadcrumbs::for('settings', function ($trail) {
+    $trail->push('Setting', route('settings.index'));
+});
+
+Breadcrumbs::for('customers', function ($trail) {
+    $trail->push('Customer', route('customers.index'));
+});
+
+Breadcrumbs::for('transactions', function ($trail, $customer) {
+    $trail->push('Transaction', route('transactions.index', $customer));
+});

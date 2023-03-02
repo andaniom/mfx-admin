@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Setting;
 use App\Models\Task;
+use App\Models\Transaction;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class HomeController extends Controller
@@ -38,6 +42,69 @@ class HomeController extends Controller
                 $progress = $total / $count;
             }
         }
-        return view('home', ['count' => $count, 'progress' => $progress]);
+
+        $totalAmount = Transaction::select(DB::raw('SUM(amount) as total_amount'))
+            ->where('user_id', auth()->id())
+            ->groupBy('user_id')->groupBy('customer_id')->first();
+        $count = Transaction::where('user_id', auth()->id())
+            ->groupBy('user_id')->count();
+        $totalAmountMonth = Transaction::select(DB::raw('SUM(amount) as total_amount'))
+            ->where('user_id', auth()->id())
+            ->whereMonth('created_at', Carbon::now()->month)
+            ->groupBy('user_id')->groupBy('customer_id')->first();
+        $countMonth = Transaction::where('user_id', auth()->id())
+            ->whereMonth('created_at', Carbon::now()->month)
+            ->groupBy('user_id')->count();
+
+        $leaderboard = Transaction::select(
+                DB::raw('users.name'),
+                DB::raw('sum(amount) as `total_amount`')
+            )
+            ->leftJoin('users', 'transactions.user_id', '=', 'users.id')
+            ->groupBy('user_id')
+            ->groupBy(DB::raw("DATE_FORMAT(transactions.created_at, '%Y')"))
+            ->orderBy('total_amount', 'desc')
+            ->get();
+
+        $deposit = Transaction::select(
+                DB::raw("DATE_FORMAT(created_at, '%m') as month"),
+                DB::raw('sum(amount) as `total_amount`')
+            )
+            ->where('amount', '>', 0)
+            ->where('user_id', auth()->id())
+            ->whereYear('created_at', Carbon::now()->year)
+            ->groupBy(DB::raw("DATE_FORMAT(created_at, '%m')"))
+            ->groupBy('user_id')
+            ->orderBy('month')
+            ->get();
+
+        $withdrawal = Transaction::select(
+                DB::raw("DATE_FORMAT(created_at, '%m') as month"),
+                DB::raw('sum(amount) as `total_amount`')
+            )
+            ->where('amount', '<', 0)
+            ->where('user_id', auth()->id())
+            ->whereYear('created_at', Carbon::now()->year)
+            ->groupBy(DB::raw("DATE_FORMAT(created_at, '%m')"))
+            ->groupBy('user_id')
+            ->orderBy('month')
+            ->get();
+
+        $setting = Setting::where("name", 'reward')->first();;
+        $reward = $setting != null ? $setting->value : '0';
+
+        $result = new Transaction();
+        $result->count = $count;
+        $result->progress = $progress;
+        $result->totalAmount = $totalAmount->total_amount;
+        $result->count = $count;
+        $result->totalAmountMonth = $totalAmountMonth->total_amount;
+        $result->countMonth = $countMonth;
+        $result->reward = $totalAmountMonth->total_amount * ($reward / 100);
+        $result->leaderboard = $leaderboard;
+        $result->deposit = $deposit;
+        $result->withdrawal = $withdrawal;
+
+        return view('home', compact('result'));
     }
 }

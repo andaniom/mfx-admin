@@ -3,7 +3,7 @@
 @section('title', 'Roles')
 
 @section('content')
-    {{ Breadcrumbs::render('posts-create') }}
+    {{ Breadcrumbs::render('roles') }}
     <div class="bg-light p-4 rounded">
         <h1>{{ ucfirst($role->name) }} Role</h1>
         <div class="lead">

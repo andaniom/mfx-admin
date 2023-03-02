@@ -37,6 +37,12 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
             Route::get('/download', 'AttendanceController@generatePDF')->name('attendance.download.pdf');
         });
 
+        Route::group(['prefix' => 'profile'], function() {
+            Route::get('/{user}', 'UsersController@showProfile')->name('profile.show');
+            Route::get('/{user}/edit', 'UsersController@editProfile')->name('profile.edit');
+            Route::patch('/{user}/update', 'UsersController@updateProfile')->name('profile.update');
+        });
+
         Route::group(['prefix' => 'admin'], function() {
             Route::group(['prefix' => 'users'], function() {
                 Route::get('/', 'UsersController@index')->name('users.index');
@@ -71,6 +77,23 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
             Route::get('/attendance', 'AttendanceController@admin')->name('attendance.admin');
         });
 
+        Route::group(['prefix' => 'settings'], function() {
+            Route::get('/', 'SettingController@index')->name('settings.index');
+            Route::post('/', 'SettingController@store')->name('settings.store');
+            Route::patch('/{setting}/update', 'SettingController@update')->name('settings.update');
+        });
+
+        Route::group(['prefix' => 'customers'], function() {
+            Route::get('/', 'CustomerController@index')->name('customers.index');
+            Route::post('/', 'CustomerController@store')->name('customers.store');
+            Route::patch('/{customer}/update', 'CustomerController@update')->name('customers.update');
+        });
+
+        Route::group(['prefix' => 'transactions'], function() {
+            Route::post('/{customer}', 'TransactionController@store')->name('transactions.store');
+            Route::get('/{customer}', 'TransactionController@index')->name('transactions.index');
+        });
+
         Route::resource('roles', RolesController::class);
         Route::resource('permissions', PermissionsController::class);
     });
@@ -83,7 +106,7 @@ Route::get('/serve', function () {
 });
 
 Route::get('/migrate', function () {
-    Artisan::call('migrate:refresh');
+    Artisan::call('migrate');
 });
 Route::get('/link', function () {
     Artisan::call('storage:link');

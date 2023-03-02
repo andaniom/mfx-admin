@@ -14,6 +14,7 @@
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
 
+{{--    <link href="{{ url('/') }}/css/sb-admin-2.css" rel="stylesheet">--}}
     <link href="{{ url('/') }}/css/sb-admin-2.min.css" rel="stylesheet">
     <link href="{{ url('/') }}/css/app.css" rel="stylesheet">
     <link href="{{ url('/') }}/vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
@@ -27,97 +28,19 @@
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
     @notifyCss
 
-    {{--    <x-head.tinymce-config/>--}}
+    <x-head.tinymce-config/>
+    @section("scripts")
+
+    @show
 </head>
 <body>
 <div id="wrapper">
     @auth
         @section('sidebar')
-            <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
-                <a class="sidebar-brand d-flex align-items-center justify-content-center"
-                   href="{{ route('home.index') }}">
-                    <div class="sidebar-brand-icon">
-                        <img src="{{ url('/') }}/img/favicon.ico" style="width: 5rem;">
-                    </div>
-                    <div class="sidebar-brand-text mx-3">MFX Admin <sup>Billionaire</sup></div>
-                </a>
-
-                @can('home.index')
-                    <hr class="sidebar-divider my-0">
-                    <li class="nav-item {{ (request()->is('/')) ? 'active' : '' }}">
-                        <a class="nav-link" href="{{ route('home.index') }}">
-                            <i class="fas fa-fw fa-tachometer-alt"></i>
-                            <span>Dashboard</span></a>
-                    </li>
-                @endcan
-
-
-                @can('tasks.index')
-                    <hr class="sidebar-divider my-0">
-                    <li class="nav-item {{ (request()->is('tasks')) ? 'active' : '' }}">
-                        <a class="nav-link" href="{{ url('/tasks') }}">
-                            <i class="fas fa-fw fa-clipboard-list"></i>
-                            <span>Task</span></a>
-                    </li>
-                @endcan
-
-                @can('attendance.index')
-                    <hr class="sidebar-divider my-0">
-                    <li class="nav-item {{ (request()->is('attendance')) ? 'active' : '' }}">
-                        <a class="nav-link" href="{{ url('/attendance') }}">
-                            <i class="fas fa-fw fa-calendar"></i>
-                            <span>Attendance</span></a>
-                    </li>
-                @endcan
-
-                <hr class="sidebar-divider my-0">
-
-                @role('admin')
-                <hr class="sidebar-divider my-0">
-                <li class="nav-item ">
-                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
-                       aria-expanded="true" aria-controls="collapsePages">
-                        <i class="fas fa-fw fa-folder"></i>
-                        <span>Admin</span>
-                    </a>
-                    <div id="collapsePages" class="collapse {{ (request()->is('admin/*')) ? 'show' : '' }}"
-                         aria-labelledby="headingPages" data-parent="#accordionSidebar">
-                        <div class="bg-white py-2 collapse-inner rounded">
-                            @can('users.index')
-                                <a class="collapse-item {{ (request()->is('admin/users/*')) || (request()->is('admin/users')) ? 'active' : '' }}"
-                                   href="{{ route('users.index') }}">Users Management</a>
-                            @endcan
-                            @can('attendance.admin')
-                                <a class="collapse-item {{ (request()->is('admin/attendance')) || (request()->is('admin/events/*')) ? 'active' : '' }}"
-                                   href="{{ route('attendance.admin') }}">Attendance Management</a>
-                            @endcan
-                            @can('posts.index')
-                                <a class="collapse-item {{ (request()->is('admin/posts')) || (request()->is('admin/posts/*')) ? 'active' : '' }}"
-                                   href="{{ route('posts.index') }}">Posts</a>
-                            @endcan
-                            @can('events.index')
-                                <a class="collapse-item {{ (request()->is('admin/events')) || (request()->is('admin/events/*')) ? 'active' : '' }}"
-                                   href="{{ route('events.index') }}">Events</a>
-                            @endcan
-                            @can('roles.index')
-                                <a class="collapse-item {{ (request()->is('admin/role')) || (request()->is('admin/roles/*')) ? 'active' : '' }}"
-                                   href="{{ route('roles.index') }}">Roles</a>
-                            @endcan
-                        </div>
-                    </div>
-                </li>
-                @endrole
-
-
-                <hr class="sidebar-divider d-none d-md-block">
-
-                <div class="text-center d-none d-md-inline">
-                    <button class="rounded-circle border-0" id="sidebarToggle"></button>
-                </div>
-            </ul>
+            @include('layouts.partials.side-bar', ['menuItems' => $menuItems])
         @show
     @endauth
-    <div id="content-wrapper" class="d-flex flex-column">
+    <div id="content-wrapper">
         <div id="content">
             @auth
                 @section('navbar')
@@ -265,7 +188,7 @@
 
                                 <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                      aria-labelledby="userDropdown">
-                                    <a class="dropdown-item" href="#">
+                                    <a class="dropdown-item" href="{{ route('profile.show', auth()->user()) }}">
                                         <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                         Profile
                                     </a>
@@ -313,7 +236,4 @@
 <x:notify-messages/>
 @notifyJs
 </body>
-@section("scripts")
-
-@show
 </html>

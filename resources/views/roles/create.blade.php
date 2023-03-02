@@ -3,7 +3,7 @@
 @section('title', 'Roles')
 
 @section('content')
-    {{ Breadcrumbs::render('posts-create') }}
+    {{ Breadcrumbs::render('roles') }}
     <form action="{{ route('roles.store') }}" method="POST">
         @csrf
         <div class="mb-3">

@@ -110,32 +110,60 @@
         // Update the clock every 1000 milliseconds (1 second)
         setInterval(updateClock, 1000);
 
-        $("#checkIn").click(function(e){
-            $.ajax({
-                url: '{{route('attendance.checkin')}}',
-                method: 'POST',
-                success: function (response) {
-                    location.reload();
-                },
-                error: function (response) {
-                    console.log(response)
-                    // Handle the error response
-                }
-            });
+        $("#checkIn").click(function (e) {
+            getLocation()
+                .then(position => {
+                    const latitude = position.coords.latitude;
+                    const longitude = position.coords.longitude;
+                    console.log('Latitude: ' + latitude);
+                    console.log('Longitude: ' + longitude);
+                    $.ajax({
+                        url: '{{route('attendance.checkin')}}',
+                        method: 'POST',
+                        data: {
+                            'latitude': latitude,
+                            'longitude': longitude
+                        },
+                        success: function (response) {
+                            location.reload();
+                        },
+                        error: function (response) {
+                            console.log(response)
+                            // Handle the error response
+                        }
+                    });
+                })
+                .catch(error => {
+                    showError(error)
+                });
         });
 
         // Add a click events listener to the Check Out button
-        $("#checkOut").click(function(e){
-            $.ajax({
-                url: '{{route('attendance.checkout')}}',
-                method: 'POST',
-                success: function (response) {
-                    location.reload();
-                },
-                error: function (response) {
-                    // Handle the error response
-                }
-            });
+        $("#checkOut").click(function (e) {
+            getLocation()
+                .then(position => {
+                    const latitude = position.coords.latitude;
+                    const longitude = position.coords.longitude;
+                    console.log('Latitude: ' + latitude);
+                    console.log('Longitude: ' + longitude);
+                    $.ajax({
+                        url: '{{route('attendance.checkout')}}',
+                        method: 'POST',
+                        data: {
+                            'latitude': latitude,
+                            'longitude': longitude
+                        },
+                        success: function (response) {
+                            location.reload();
+                        },
+                        error: function (response) {
+                            // Handle the error response
+                        }
+                    });
+                })
+                .catch(error => {
+                    showError(error)
+                });
         });
     </script>
 

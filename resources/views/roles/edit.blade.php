@@ -3,7 +3,7 @@
 @section('title', 'Roles')
 
 @section('content')
-    {{ Breadcrumbs::render('posts-create') }}
+    {{ Breadcrumbs::render('roles') }}
     <form action="{{ route('roles.update', $role->id) }}" method="POST">
         @method('put')
         @csrf

@@ -26,6 +26,8 @@ return new class extends Migration
             $table->enum('role', ['users','admin','super_admin'])->default('users');
             $table->rememberToken();
             $table->timestamps();
+
+            $table->foreign('parent_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

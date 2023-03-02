@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('scripts')
+    <x-head.tinymce-config/>
+@endsection
+
 @section('title', 'Event')
 
 @section('content')
@@ -47,4 +51,5 @@
                 </form>
             </div>
         </div>
+    </div>
 @endsection

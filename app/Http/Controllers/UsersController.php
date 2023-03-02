@@ -31,7 +31,7 @@ class UsersController extends Controller
             'password' => Hash::make('123123123')
         ]));
 
-        notify()->success($request->name.', User created successfully.');
+        notify()->success($request->name . ', User created successfully.');
 
         return redirect()->route('users.index')
             ->withSuccess(__('User created successfully.'));
@@ -52,9 +52,25 @@ class UsersController extends Controller
         ]);
     }
 
+    public function showProfile(User $user)
+    {
+        return view('profiles.show', [
+            'user' => $user
+        ]);
+    }
+
     public function edit(User $user)
     {
         return view('users.edit', [
+            'user' => $user,
+            'userRole' => $user->roles->pluck('name')->toArray(),
+            'roles' => Role::latest()->get()
+        ]);
+    }
+
+    public function editProfile(User $user)
+    {
+        return view('profiles.edit', [
             'user' => $user,
             'userRole' => $user->roles->pluck('name')->toArray(),
             'roles' => Role::latest()->get()
@@ -70,8 +86,19 @@ class UsersController extends Controller
         $role = Role::findById($request->get('role'));
         $user->syncPermissions($role->permissions);
 
-        return redirect()->route('users.index')
-            ->withSuccess(__('User updated successfully.'));
+        notify()->success('User updated successfully.');
+        return redirect()->route('users.index');
+    }
+
+    public function updateProfile(User $user, UpdateUserRequest $request)
+    {
+        $user->name = $request->name;
+        $user->phone_number = $request->phone_number;
+        $user->birth_date = $request->birth_date;
+        $user->save();
+
+        notify()->success('User updated successfully.');
+        return redirect()->route('profile.show', $user);
     }
 
     public function destroy(User $user)
