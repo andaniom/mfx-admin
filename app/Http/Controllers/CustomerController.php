@@ -10,12 +10,12 @@ class CustomerController extends Controller
 {
     public function index()
     {
-        $customers = Customer::where('user_id', auth()->id())->orderBy('id')->paginate(5);
-//        $customers = Customer::select('customers.*', DB::raw('SUM(transactions.amount) as amount'))
-//            ->leftJoin('transactions', 'transactions.customer_id', '=', 'customers.id')
-//            ->where('customers.user_id', auth()->id())
-//            ->groupBy('customers.id')
-//            ->paginate(5);
+//        $customers = Customer::where('user_id', auth()->id())->orderBy('id')->paginate(5);
+        $customers = Customer::select('customers.*', DB::raw('SUM(transactions.amount) as amount'))
+            ->leftJoin('transactions', 'transactions.customer_id', '=', 'customers.id')
+            ->where('customers.user_id', auth()->id())
+            ->groupBy('customers.id')
+            ->paginate(5);
         return view('customers.index', compact('customers'));
     }
 
