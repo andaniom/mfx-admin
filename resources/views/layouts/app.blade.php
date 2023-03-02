@@ -17,7 +17,8 @@
     <link href="{{ url('/') }}/css/sb-admin-2.css" rel="stylesheet">
     <link href="{{ url('/') }}/css/sb-admin-2.min.css" rel="stylesheet">
     <link href="{{ url('/') }}/css/app.css" rel="stylesheet">
-    <link href="{{ url('/') }}/vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
+{{--    <link href="{{ url('/') }}/vendor/fontawesome-free/css/all.min.css" rel="stylesheet">--}}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <script src="{{ url('/') }}/vendor/jquery/jquery.min.js"></script>
     <script src="{{ url('/') }}/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
