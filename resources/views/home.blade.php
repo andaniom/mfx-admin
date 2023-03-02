@@ -4,10 +4,6 @@
 
 @section('content')
     <div class="">
-        <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
-        </div>
-
         <div class="row">
             <a class="col-xl-3 col-md-6 mb-4" href="{{route("customers.index")}}" style="text-decoration: none;">
                 <div class="card border-left-primary shadow h-100 py-2">
@@ -19,8 +15,10 @@
                                 </div>
                                 <div class="h5 mb-0 font-weight-bold text-gray-800">
                                     {{number_format($result->totalAmountMonth)}}
+                                    / {{number_format($result->totalAmountMonthAll)}}
                                 </div>
                                 <div class="h5 mb-0 text-primary text-xs">{{number_format($result->countMonth) }}
+                                    / {{number_format($result->countMonthAll) }}
                                     <span class="text-primary text-left text-xs">Transactions</span>
                                 </div>
                             </div>
@@ -41,9 +39,10 @@
                                     Earnings (Summary)
                                 </div>
                                 <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                    {{number_format($result->totalAmount)}}
+                                    {{number_format($result->totalAmount)}} / {{number_format($result->totalAmountAll)}}
                                 </div>
                                 <div class="h5 mb-0 text-primary text-xs">{{number_format($result->count) }}
+                                    / {{number_format($result->countAll) }}
                                     <span class="text-primary text-left text-xs">Transactions</span>
                                 </div>
                             </div>
@@ -204,6 +203,10 @@
 
         const withdrawalResult = {{ Js::from($result->withdrawal) }};
 
+        const depositAllResult = {{ Js::from($result->depositAll) }};
+
+        const withdrawalAllResult = {{ Js::from($result->withdrawalAll) }};
+
         const listDeposit = [];
         for (const label in labels) {
             let data = {x: labels[label]}
@@ -238,40 +241,107 @@
             listWithdrawal.push(data);
         }
 
-        var ctxArea = document.getElementById("myAreaChart");
-        var myLineChart = new Chart(ctxArea, {
+        const listDepositAll = [];
+        for (const label in labels) {
+            let data = {x: labels[label]}
+            if (label <= new Date().getMonth()) {
+                for (const key in depositAllResult) {
+                    if (parseInt(depositAllResult[key].month) === (parseInt(label) + 1)) {
+                        data.y = depositAllResult[key].total_amount;
+                        break
+                    }
+                }
+                if (!data.y) {
+                    data.y = 0;
+                }
+            }
+            listDepositAll.push(data);
+        }
+
+        const listWithdrawalAll = [];
+        for (const label in labels) {
+            let data = {x: labels[label]}
+            if (label <= new Date().getMonth()) {
+                for (const key in withdrawalAllResult) {
+                    if (parseInt(withdrawalAllResult[key].month) === (parseInt(label) + 1)) {
+                        data.y = Math.abs(withdrawalAllResult[key].total_amount);
+                        break;
+                    }
+                }
+                if (!data.y) {
+                    data.y = 0;
+                }
+            }
+            listWithdrawalAll.push(data);
+        }
+
+        const ctxArea = document.getElementById("myAreaChart");
+        const myLineChart = new Chart(ctxArea, {
             type: 'line',
             data: {
                 // labels: labels,
-                datasets: [{
-                    label: "Deposit",
-                    lineTension: 0.3,
-                    backgroundColor: "rgb(84,239,6)",
-                    borderColor: "rgb(84,239,6)",
-                    pointRadius: 3,
-                    pointBackgroundColor: "rgb(84,239,6)",
-                    pointBorderColor: "rgb(84,239,6)",
-                    pointHoverRadius: 3,
-                    pointHoverBackgroundColor: "rgb(84,239,6)",
-                    pointHoverBorderColor: "rgb(84,239,6)",
-                    pointHitRadius: 10,
-                    pointBorderWidth: 2,
-                    data: listDeposit,
-                }, {
-                    label: "Withdrawal",
-                    lineTension: 0.3,
-                    backgroundColor: "rgb(241,29,47)",
-                    borderColor: "rgb(241,29,47,1)",
-                    pointRadius: 3,
-                    pointBackgroundColor: "rgba(241,29,47, 1)",
-                    pointBorderColor: "rgba(241,29,47, 1)",
-                    pointHoverRadius: 3,
-                    pointHoverBackgroundColor: "rgba(241,29,47, 1)",
-                    pointHoverBorderColor: "rgba(241,29,47, 1)",
-                    pointHitRadius: 10,
-                    pointBorderWidth: 2,
-                    data: listWithdrawal,
-                }],
+                datasets: [
+                    {
+                        label: "Deposit Team",
+                        lineTension: 0.3,
+                        backgroundColor: "rgb(6,72,239)",
+                        borderColor: "rgb(6,72,239)",
+                        pointRadius: 3,
+                        pointBackgroundColor: "rgb(6,72,239)",
+                        pointBorderColor: "rgb(6,72,239)",
+                        pointHoverRadius: 3,
+                        pointHoverBackgroundColor: "rgb(6,72,239)",
+                        pointHoverBorderColor: "rgb(6,72,239)",
+                        pointHitRadius: 10,
+                        pointBorderWidth: 2,
+                        data: listDepositAll,
+                    },
+                    {
+                        label: "Withdrawal Team",
+                        lineTension: 0.3,
+                        backgroundColor: "rgb(250,116,6)",
+                        borderColor: "rgb(250,116,6)",
+                        pointRadius: 3,
+                        pointBackgroundColor: "rgb(250,116,6)",
+                        pointBorderColor: "rgb(250,116,6)",
+                        pointHoverRadius: 3,
+                        pointHoverBackgroundColor: "rgb(250,116,6)",
+                        pointHoverBorderColor: "rgb(250,116,6)",
+                        pointHitRadius: 10,
+                        pointBorderWidth: 2,
+                        data: listWithdrawalAll,
+                    },
+                    {
+                        label: "Deposit",
+                        lineTension: 0.3,
+                        backgroundColor: "rgb(84,239,6)",
+                        borderColor: "rgb(84,239,6)",
+                        pointRadius: 3,
+                        pointBackgroundColor: "rgb(84,239,6)",
+                        pointBorderColor: "rgb(84,239,6)",
+                        pointHoverRadius: 3,
+                        pointHoverBackgroundColor: "rgb(84,239,6)",
+                        pointHoverBorderColor: "rgb(84,239,6)",
+                        pointHitRadius: 10,
+                        pointBorderWidth: 2,
+                        data: listDeposit,
+                    },
+                    {
+                        label: "Withdrawal",
+                        lineTension: 0.3,
+                        backgroundColor: "rgb(241,29,47)",
+                        borderColor: "rgb(241,29,47,1)",
+                        pointRadius: 3,
+                        pointBackgroundColor: "rgba(241,29,47, 1)",
+                        pointBorderColor: "rgba(241,29,47, 1)",
+                        pointHoverRadius: 3,
+                        pointHoverBackgroundColor: "rgba(241,29,47, 1)",
+                        pointHoverBorderColor: "rgba(241,29,47, 1)",
+                        pointHitRadius: 10,
+                        pointBorderWidth: 2,
+                        data: listWithdrawal,
+                    }
+                ],
             },
             options: {
                 responsive: true,
@@ -299,7 +369,7 @@
                     }],
                     yAxes: [{
                         ticks: {
-                            min : 0,
+                            min: 0,
                             maxTicksLimit: 5,
                             padding: 10,
                             // Include a dollar sign in the ticks

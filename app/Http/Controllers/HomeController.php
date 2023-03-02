@@ -57,6 +57,13 @@ class HomeController extends Controller
             ->whereMonth('created_at', Carbon::now()->month)
             ->groupBy('user_id')->count();
 
+        $totalAmountAll = Transaction::select(DB::raw('SUM(amount) as total_amount'))->first();
+        $countAll = Transaction::count();
+        $totalAmountMonthAll = Transaction::select(DB::raw('SUM(amount) as total_amount'))
+            ->whereMonth('created_at', Carbon::now()->month)->first();
+        $countMonthAll = Transaction::whereMonth('created_at', Carbon::now()->month)
+            ->count();
+
         $leaderboard = Transaction::select(
             DB::raw('users.name'),
             DB::raw('sum(amount) as `total_amount`')
@@ -92,6 +99,26 @@ class HomeController extends Controller
             ->orderBy('month')
             ->get();
 
+        $depositAll = Transaction::select(
+            DB::raw("DATE_FORMAT(created_at, '%m') as month"),
+            DB::raw('sum(amount) as `total_amount`')
+        )
+            ->where('amount', '>', 0)
+            ->whereYear('created_at', Carbon::now()->year)
+            ->groupBy(DB::raw("DATE_FORMAT(created_at, '%m')"))
+            ->orderBy('month')
+            ->get();
+
+        $withdrawalAll = Transaction::select(
+            DB::raw("DATE_FORMAT(created_at, '%m') as month"),
+            DB::raw('sum(amount) as `total_amount`')
+        )
+            ->where('amount', '<', 0)
+            ->whereYear('created_at', Carbon::now()->year)
+            ->groupBy(DB::raw("DATE_FORMAT(created_at, '%m')"))
+            ->orderBy('month')
+            ->get();
+
         $customers = Customer::where('user_id', auth()->id())->count();
 
         $setting = Setting::where("name", 'reward')->first();;
@@ -109,6 +136,12 @@ class HomeController extends Controller
         $result->deposit = $deposit;
         $result->withdrawal = $withdrawal;
         $result->customers = $customers;
+        $result->totalAmountAll = $totalAmountAll ? $totalAmountAll->total_amount : 0;
+        $result->countAll = $countAll;
+        $result->totalAmountMonthAll = $totalAmountMonthAll ? $totalAmountMonthAll->total_amount : 0;
+        $result->countMonthAll = $countMonthAll;
+        $result->depositAll = $depositAll;
+        $result->withdrawalAll = $withdrawalAll;
 
         return view('home', compact('result'));
     }
