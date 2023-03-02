@@ -15,6 +15,7 @@ class CustomerController extends Controller
             ->leftJoin('transactions', 'transactions.customer_id', '=', 'customers.id')
             ->where('customers.user_id', auth()->id())
             ->groupBy('customers.id')
+            ->groupBy('customers.user_id')
             ->paginate(5);
         return view('customers.index', compact('customers'));
     }
