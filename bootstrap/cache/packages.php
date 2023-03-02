@@ -1,101 +1,101 @@
 <?php return array (
-  'barryvdh/laravel-dompdf' => 
+  'barryvdh/laravel-dompdf' =>
   array (
-    'providers' => 
+    'providers' =>
     array (
       0 => 'Barryvdh\\DomPDF\\ServiceProvider',
     ),
-    'aliases' => 
+    'aliases' =>
     array (
       'Pdf' => 'Barryvdh\\DomPDF\\Facade\\Pdf',
       'PDF' => 'Barryvdh\\DomPDF\\Facade\\Pdf',
     ),
   ),
-  'davejamesmiller/laravel-breadcrumbs' => 
+  'davejamesmiller/laravel-breadcrumbs' =>
   array (
-    'providers' => 
+    'providers' =>
     array (
       0 => 'DaveJamesMiller\\Breadcrumbs\\BreadcrumbsServiceProvider',
     ),
-    'aliases' => 
+    'aliases' =>
     array (
       'Breadcrumbs' => 'DaveJamesMiller\\Breadcrumbs\\Facades\\Breadcrumbs',
     ),
   ),
-  'facade/ignition' => 
+  'facade/ignition' =>
   array (
-    'providers' => 
+    'providers' =>
     array (
       0 => 'Facade\\Ignition\\IgnitionServiceProvider',
     ),
-    'aliases' => 
+    'aliases' =>
     array (
       'Flare' => 'Facade\\Ignition\\Facades\\Flare',
     ),
   ),
-  'fruitcake/laravel-cors' => 
+  'fruitcake/laravel-cors' =>
   array (
-    'providers' => 
+    'providers' =>
     array (
       0 => 'Fruitcake\\Cors\\CorsServiceProvider',
     ),
   ),
-  'laravel/sail' => 
+  'laravel/sail' =>
   array (
-    'providers' => 
+    'providers' =>
     array (
       0 => 'Laravel\\Sail\\SailServiceProvider',
     ),
   ),
-  'laravel/sanctum' => 
+  'laravel/sanctum' =>
   array (
-    'providers' => 
+    'providers' =>
     array (
       0 => 'Laravel\\Sanctum\\SanctumServiceProvider',
     ),
   ),
-  'laravel/tinker' => 
+  'laravel/tinker' =>
   array (
-    'providers' => 
+    'providers' =>
     array (
       0 => 'Laravel\\Tinker\\TinkerServiceProvider',
     ),
   ),
-  'laravel/ui' => 
+  'laravel/ui' =>
   array (
-    'providers' => 
+    'providers' =>
     array (
       0 => 'Laravel\\Ui\\UiServiceProvider',
     ),
   ),
-  'mckenziearts/laravel-notify' => 
+  'mckenziearts/laravel-notify' =>
   array (
-    'providers' => 
+    'providers' =>
     array (
       0 => 'Mckenziearts\\Notify\\LaravelNotifyServiceProvider',
     ),
-    'aliases' => 
+    'aliases' =>
     array (
       'Notify' => 'Mckenziearts\\Notify\\Facades\\LaravelNotify',
     ),
   ),
-  'nesbot/carbon' => 
+  'nesbot/carbon' =>
   array (
-    'providers' => 
+    'providers' =>
     array (
       0 => 'Carbon\\Laravel\\ServiceProvider',
     ),
   ),
-  'nunomaduro/collision' => 
+  'nunomaduro/collision' =>
   array (
-    'providers' => 
+    'providers' =>
     array (
       0 => 'NunoMaduro\\Collision\\Adapters\\Laravel\\CollisionServiceProvider',
     ),
   ),
-  'spatie/laravel-permission' => 
+  'spatie/laravel-permission' =>
   array (
-    'providers' => 
+    'providers' =>
     array (
       0 => 'Spatie\\Permission\\PermissionServiceProvider',
     ),
