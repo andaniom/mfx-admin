@@ -5,7 +5,6 @@ namespace Laravel\Sanctum;
 use Illuminate\Contracts\Auth\Factory as AuthFactory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
-use Laravel\Sanctum\Events\TokenAuthenticated;
 
 class Guard
 {
@@ -61,34 +60,18 @@ class Guard
             }
         }
 
-        if ($token = $this->getTokenFromRequest($request)) {
+        if ($token = $request->bearerToken()) {
             $model = Sanctum::$personalAccessTokenModel;
 
             $accessToken = $model::findToken($token);
 
-            if (! $this->isValidAccessToken($accessToken) ||
-                ! $this->supportsTokens($accessToken->tokenable)) {
+            if (! $this->isValidAccessToken($accessToken)) {
                 return;
             }
 
-            $tokenable = $accessToken->tokenable->withAccessToken(
-                $accessToken
-            );
-
-            event(new TokenAuthenticated($accessToken));
-
-            if (method_exists($accessToken->getConnection(), 'hasModifiedRecords') &&
-                method_exists($accessToken->getConnection(), 'setRecordModificationState')) {
-                tap($accessToken->getConnection()->hasModifiedRecords(), function ($hasModifiedRecords) use ($accessToken) {
-                    $accessToken->forceFill(['last_used_at' => now()])->save();
-
-                    $accessToken->getConnection()->setRecordModificationState($hasModifiedRecords);
-                });
-            } else {
-                $accessToken->forceFill(['last_used_at' => now()])->save();
-            }
-
-            return $tokenable;
+            return $this->supportsTokens($accessToken->tokenable) ? $accessToken->tokenable->withAccessToken(
+                tap($accessToken->forceFill(['last_used_at' => now()]))->save()
+            ) : null;
         }
     }
 
@@ -103,21 +86,6 @@ class Guard
         return $tokenable && in_array(HasApiTokens::class, class_uses_recursive(
             get_class($tokenable)
         ));
-    }
-
-    /**
-     * Get the token from the request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return string|null
-     */
-    protected function getTokenFromRequest(Request $request)
-    {
-        if (is_callable(Sanctum::$accessTokenRetrievalCallback)) {
-            return (string) (Sanctum::$accessTokenRetrievalCallback)($request);
-        }
-
-        return $request->bearerToken();
     }
 
     /**
