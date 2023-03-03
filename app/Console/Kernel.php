@@ -22,6 +22,7 @@ class Kernel extends ConsoleKernel
 
     protected function schedule(Schedule $schedule)
     {
+        Log::info("schedule run");
         $schedule->command('attendance-job')
             ->dailyAt('01:00');
         $schedule->command('create-permission-routes')
