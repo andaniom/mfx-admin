@@ -15,7 +15,7 @@ class AttendanceJob extends Command
      *
      * @var string
      */
-    protected $signature = 'attendance:job';
+    protected $signature = 'attendance-job';
 
     /**
      * The console command description.
