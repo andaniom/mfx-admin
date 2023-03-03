@@ -144,3 +144,9 @@ Route::get('/view-clear', function() {
     Artisan::call('view:clear');
     return 'View cache has been cleared';
 });
+
+// Clear view cache:
+Route::get('/optimize-clear', function() {
+    Artisan::call('optimize:clear');
+    return 'optimize cache has been cleared';
+});
