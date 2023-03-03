@@ -4,7 +4,6 @@ namespace Illuminate\Http\Concerns;
 
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Date;
 use SplFileInfo;
 use stdClass;
 use Symfony\Component\VarDumper\VarDumper;
@@ -60,7 +59,7 @@ trait InteractsWithInput
         if ($position !== false) {
             $header = substr($header, $position + 7);
 
-            return strpos($header, ',') !== false ? strstr($header, ',', true) : $header;
+            return strpos($header, ',') !== false ? strstr(',', $header, true) : $header;
         }
     }
 
@@ -298,27 +297,6 @@ trait InteractsWithInput
     }
 
     /**
-     * Retrieve input from the request as a Carbon instance.
-     *
-     * @param  string  $key
-     * @param  string|null  $format
-     * @param  string|null  $tz
-     * @return \Illuminate\Support\Carbon|null
-     */
-    public function date($key, $format = null, $tz = null)
-    {
-        if ($this->isNotFilled($key)) {
-            return null;
-        }
-
-        if (is_null($format)) {
-            return Date::parse($this->input($key), $tz);
-        }
-
-        return Date::createFromFormat($format, $this->input($key), $tz);
-    }
-
-    /**
      * Retrieve input from the request as a collection.
      *
      * @param  array|string|null  $key
@@ -513,12 +491,14 @@ trait InteractsWithInput
     /**
      * Dump the request items and end the script.
      *
-     * @param  mixed  $keys
+     * @param  array|mixed  $keys
      * @return void
      */
     public function dd(...$keys)
     {
-        $this->dump(...$keys);
+        $keys = is_array($keys) ? $keys : func_get_args();
+
+        call_user_func_array([$this, 'dump'], $keys);
 
         exit(1);
     }
@@ -526,7 +506,7 @@ trait InteractsWithInput
     /**
      * Dump the items.
      *
-     * @param  mixed  $keys
+     * @param  array  $keys
      * @return $this
      */
     public function dump($keys = [])

@@ -265,11 +265,7 @@ trait ValidatesAttributes
         $firstDate = $this->getDateTimeWithOptionalFormat($format, $first);
 
         if (! $secondDate = $this->getDateTimeWithOptionalFormat($format, $second)) {
-            if (is_null($second = $this->getValue($second))) {
-                return true;
-            }
-
-            $secondDate = $this->getDateTimeWithOptionalFormat($format, $second);
+            $secondDate = $this->getDateTimeWithOptionalFormat($format, $this->getValue($second));
         }
 
         return ($firstDate && $secondDate) && ($this->compare($firstDate, $secondDate, $operator));
@@ -372,29 +368,6 @@ trait ValidatesAttributes
     }
 
     /**
-     * Validate that an array has all of the given keys.
-     *
-     * @param  string  $attribute
-     * @param  mixed  $value
-     * @param  array  $parameters
-     * @return bool
-     */
-    public function validateRequiredArrayKeys($attribute, $value, $parameters)
-    {
-        if (! is_array($value)) {
-            return false;
-        }
-
-        foreach ($parameters as $param) {
-            if (! Arr::exists($value, $param)) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    /**
      * Validate the size of an attribute is between a set of values.
      *
      * @param  string  $attribute
@@ -472,11 +445,7 @@ trait ValidatesAttributes
             return true;
         }
 
-        try {
-            if ((! is_string($value) && ! is_numeric($value)) || strtotime($value) === false) {
-                return false;
-            }
-        } catch (Exception $e) {
+        if ((! is_string($value) && ! is_numeric($value)) || strtotime($value) === false) {
             return false;
         }
 
@@ -1255,18 +1224,6 @@ trait ValidatesAttributes
     public function validateIpv6($attribute, $value)
     {
         return filter_var($value, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) !== false;
-    }
-
-    /**
-     * Validate that an attribute is a valid MAC address.
-     *
-     * @param  string  $attribute
-     * @param  mixed  $value
-     * @return bool
-     */
-    public function validateMacAddress($attribute, $value)
-    {
-        return filter_var($value, FILTER_VALIDATE_MAC) !== false;
     }
 
     /**

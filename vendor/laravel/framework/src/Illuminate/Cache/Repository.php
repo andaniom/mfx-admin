@@ -529,7 +529,7 @@ class Repository implements ArrayAccess, CacheContract
             $duration = Carbon::now()->diffInRealSeconds($duration, false);
         }
 
-        return (int) ($duration > 0 ? $duration : 0);
+        return (int) $duration > 0 ? $duration : 0;
     }
 
     /**
@@ -578,7 +578,7 @@ class Repository implements ArrayAccess, CacheContract
     /**
      * Fire an event for this cache instance.
      *
-     * @param  object|string  $event
+     * @param  string  $event
      * @return void
      */
     protected function event($event)
