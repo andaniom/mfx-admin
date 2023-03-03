@@ -101,9 +101,12 @@ class UsersController extends Controller
         ]);
     }
 
-    public function update(User $user, UpdateUserRequest $request)
+    public function update(User $user, Request $request)
     {
-        $user->update($request->validated());
+        $user->name = $request->name;
+        $user->phone_number = $request->phone_number;
+        $user->birth_date = $request->birth_date;
+        $user->save();
 
         $user->syncRoles([$request->get('role')]);
 
