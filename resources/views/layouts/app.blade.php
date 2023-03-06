@@ -17,22 +17,21 @@
     <link href="{{ url('/') }}/css/sb-admin-2.css" rel="stylesheet">
     <link href="{{ url('/') }}/css/sb-admin-2.min.css" rel="stylesheet">
     <link href="{{ url('/') }}/css/app.css" rel="stylesheet">
-{{--    <link href="{{ url('/') }}/vendor/fontawesome-free/css/all.min.css" rel="stylesheet">--}}
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    {{--    <link href="{{ url('/') }}/vendor/fontawesome-free/css/all.min.css" rel="stylesheet">--}}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
+          integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
 
     <script src="{{ url('/') }}/vendor/jquery/jquery.min.js"></script>
     <script src="{{ url('/') }}/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="{{ url('/') }}/vendor/jquery-easing/jquery.easing.min.js"></script>
     <script src="{{ url('/') }}/js/app.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
 
     <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
-    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
     @notifyCss
 
     <x-head.tinymce-config/>
-    @section("scripts")
-
-    @show
 </head>
 <body>
 <div id="wrapper">
@@ -193,18 +192,18 @@
                                         <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                         Profile
                                     </a>
-                                    <a class="dropdown-item" href="#">
+                                    <a class="dropdown-item" href="{{ route('password.change') }}">
                                         <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
-                                        Settings
+                                        Change Password
                                     </a>
-                                    <a class="dropdown-item" href="#">
-                                        <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
-                                        Activity Log
-                                    </a>
+                                    {{--                                    <a class="dropdown-item" href="#">--}}
+                                    {{--                                        <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>--}}
+                                    {{--                                        Activity Log--}}
+                                    {{--                                    </a>--}}
                                     <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
-                                       onclick="event.preventDefault();
-                               document.getElementById('logout-form').submit();">
+                                    <a class="dropdown-item"
+                                        onclick="event.preventDefault();
+                                        document.getElementById('logout-form').submit();">
                                         {{--                                {{ __('Logout') }}>--}}
                                         <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                                         Logout
@@ -219,7 +218,7 @@
                 @show
             @endauth
 
-            <div class="container-fluid">
+            <div class="container-fluid h-100">
                 @yield('content')
             </div>
 
@@ -236,5 +235,6 @@
 @include('notify::components.notify')
 <x:notify-messages/>
 @notifyJs
+@stack('scripts')
 </body>
 </html>

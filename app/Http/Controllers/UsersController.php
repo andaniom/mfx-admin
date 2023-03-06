@@ -8,11 +8,15 @@ use App\Models\Customer;
 use App\Models\Setting;
 use App\Models\Transaction;
 use App\Models\User;
+use App\Notifications\CreateUser;
+use App\Notifications\RegisterUserNotification;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Notification;
 use Spatie\Permission\Models\Role;
 
 class UsersController extends Controller
@@ -33,9 +37,13 @@ class UsersController extends Controller
 
     public function store(User $user, StoreUserRequest $request)
     {
-        $user->create(array_merge($request->validated(), [
-            'password' => Hash::make('123123123')
-        ]));
+        $password = $this->generateRandomPassword(10);
+        $user->password = Hash::make($password);
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->save();
+        Notification::send($user, new RegisterUserNotification($password));
+
 
         notify()->success($request->name . ', User created successfully.');
 
@@ -135,5 +143,46 @@ class UsersController extends Controller
         return redirect()->route('users.index')
             ->withSuccess(__('User deleted successfully.'));
     }
+
+    function generateRandomPassword($length = 10)
+    {
+        $chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()';
+        $charCount = strlen($chars);
+        $password = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randChar = $chars[rand(0, $charCount - 1)];
+            $password .= $randChar;
+        }
+        return $password;
+    }
+
+    public function showChangePasswordForm()
+    {
+        return view('auth.passwords.change');
+    }
+
+    public function changePassword(Request $request)
+    {
+        $request->validate([
+            'current_password' => 'required',
+            'password' => 'required|confirmed',
+        ]);
+
+        $user = auth()->user();
+
+        if (!Hash::check($request->current_password, $user->password)) {
+            return back()->withErrors(['current_password' => 'The current password is incorrect.']);
+        }
+
+        $user->update([
+            'password' => Hash::make($request->password),
+        ]);
+
+        auth()->logout();
+
+
+        return redirect()->route('login')->with('success', 'Your password has been changed successfully.');
+    }
+
 
 }

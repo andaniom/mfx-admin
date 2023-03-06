@@ -10639,6 +10639,7 @@ a:focus {
 
 #wrapper #content-wrapper #content {
     flex: 1 1 auto;
+    min-height: 89vh;
 }
 
 .container,

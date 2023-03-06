@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\UsersController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -15,13 +16,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::group(['namespace' => 'App\Http\Controllers'], function()
-{
+Route::group(['namespace' => 'App\Http\Controllers'], function () {
     Route::get('/', 'HomeController@index')->name('home.index');
 //    Route::get('/home', 'HomeController@index')->name('home.index');
 
-    Route::group(['middleware' => ['auth', 'permission']], function() {
-        Route::group(['prefix' => 'tasks'], function() {
+    Route::group(['middleware' => ['auth', 'permission']], function () {
+        Route::group(['prefix' => 'tasks'], function () {
             Route::get('/', 'TaskController@index')->name('tasks.index');
             Route::post('/', 'TaskController@store')->name('tasks.store');
             Route::patch('/{id}', 'TaskController@update')->name('tasks.update');
@@ -30,21 +30,24 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
             Route::get('/show/{id}', 'TaskController@show')->name('tasks.show');
         });
 
-        Route::group(['prefix' => 'attendance'], function() {
+        Route::group(['prefix' => 'attendance'], function () {
             Route::get('/', 'AttendanceController@index')->name('attendance.index');
             Route::post('/checkin', 'AttendanceController@checkIn')->name('attendance.checkin');
             Route::post('/checkout', 'AttendanceController@checkOut')->name('attendance.checkout');
             Route::get('/download', 'AttendanceController@generatePDF')->name('attendance.download.pdf');
         });
 
-        Route::group(['prefix' => 'profile'], function() {
+        Route::group(['prefix' => 'profile'], function () {
             Route::get('/{user}', 'UsersController@showProfile')->name('profile.show');
             Route::get('/{user}/edit', 'UsersController@editProfile')->name('profile.edit');
             Route::patch('/{user}/update', 'UsersController@updateProfile')->name('profile.update');
         });
 
-        Route::group(['prefix' => 'admin'], function() {
-            Route::group(['prefix' => 'users'], function() {
+        Route::get('/change-password', 'UsersController@showChangePasswordForm')->name('password.change');
+        Route::post('/change-password', 'UsersController@changePassword')->name('password.updated');
+
+        Route::group(['prefix' => 'admin'], function () {
+            Route::group(['prefix' => 'users'], function () {
                 Route::get('/', 'UsersController@index')->name('users.index');
                 Route::get('/create', 'UsersController@create')->name('users.create');
                 Route::post('/create', 'UsersController@store')->name('users.store');
@@ -54,7 +57,7 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
                 Route::delete('/{user}/delete', 'UsersController@destroy')->name('users.destroy');
             });
 
-            Route::group(['prefix' => 'events'], function() {
+            Route::group(['prefix' => 'events'], function () {
                 Route::get('/', 'EventController@index')->name('events.index');
                 Route::post('/create', 'EventController@store')->name('events.store');
                 Route::get('/create', 'EventController@create')->name('events.create');
@@ -64,7 +67,7 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
                 Route::delete('/{event}/delete', 'EventController@destroy')->name('events.destroy');
             });
 
-            Route::group(['prefix' => 'posts'], function() {
+            Route::group(['prefix' => 'posts'], function () {
                 Route::get('/', 'PostController@index')->name('posts.index');
                 Route::post('/create', 'PostController@store')->name('posts.store');
                 Route::get('/create', 'PostController@create')->name('posts.create');
@@ -77,19 +80,19 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
             Route::get('/attendance', 'AttendanceController@admin')->name('attendance.admin');
         });
 
-        Route::group(['prefix' => 'settings'], function() {
+        Route::group(['prefix' => 'settings'], function () {
             Route::get('/', 'SettingController@index')->name('settings.index');
             Route::post('/', 'SettingController@store')->name('settings.store');
             Route::patch('/{setting}/update', 'SettingController@update')->name('settings.update');
         });
 
-        Route::group(['prefix' => 'customers'], function() {
+        Route::group(['prefix' => 'customers'], function () {
             Route::get('/', 'CustomerController@index')->name('customers.index');
             Route::post('/', 'CustomerController@store')->name('customers.store');
             Route::patch('/{customer}/update', 'CustomerController@update')->name('customers.update');
         });
 
-        Route::group(['prefix' => 'transactions'], function() {
+        Route::group(['prefix' => 'transactions'], function () {
             Route::post('/{customer}', 'TransactionController@store')->name('transactions.store');
             Route::get('/{customer}', 'TransactionController@index')->name('transactions.index');
             Route::get('/{customer}/{user}', 'TransactionController@admin')->name('transactions.admin');
@@ -118,35 +121,35 @@ Route::get('/permission', function () {
 Route::get('/admin/seed', function () {
     Artisan::call('db:seed --class=CreateAdminUserSeeder');
 });
-Route::get('/clear-cache', function() {
+Route::get('/clear-cache', function () {
     Artisan::call('cache:clear');
     return 'Application cache has been cleared';
 });
 
 //Clear route cache:
-Route::get('/route-cache', function() {
+Route::get('/route-cache', function () {
     Artisan::call('route:cache');
     return 'Routes cache has been cleared';
 });
 
 //Clear config cache:
-Route::get('/config-cache', function() {
+Route::get('/config-cache', function () {
     Artisan::call('config:cache');
     return 'Config cache has been cleared';
 });
-Route::get('/config-clear', function() {
+Route::get('/config-clear', function () {
     Artisan::call('config:clear');
     return 'Config cache has been cleared';
 });
 
 // Clear view cache:
-Route::get('/view-clear', function() {
+Route::get('/view-clear', function () {
     Artisan::call('view:clear');
     return 'View cache has been cleared';
 });
 
 // Clear view cache:
-Route::get('/optimize-clear', function() {
+Route::get('/optimize-clear', function () {
     Artisan::call('optimize:clear');
     return 'optimize cache has been cleared';
 });
