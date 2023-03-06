@@ -20,7 +20,7 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
     Route::get('/', 'HomeController@index')->name('home.index');
 //    Route::get('/home', 'HomeController@index')->name('home.index');
 
-    Route::group(['middleware' => ['auth', 'permission']], function () {
+    Route::middleware(['auth', 'permission'])->group(function () {
         Route::group(['prefix' => 'tasks'], function () {
             Route::get('/', 'TaskController@index')->name('tasks.index');
             Route::post('/', 'TaskController@store')->name('tasks.store');
