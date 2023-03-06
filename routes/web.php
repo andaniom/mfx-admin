@@ -41,10 +41,9 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
             Route::get('/{user}', 'UsersController@showProfile')->name('profile.show');
             Route::get('/{user}/edit', 'UsersController@editProfile')->name('profile.edit');
             Route::patch('/{user}/update', 'UsersController@updateProfile')->name('profile.update');
+            Route::get('/change-password', 'UsersController@showChangePasswordForm')->name('password.change');
+            Route::post('/change-password', 'UsersController@changePassword')->name('password.updated');
         });
-
-        Route::get('/change-password', 'UsersController@showChangePasswordForm')->name('password.change');
-        Route::post('/change-password', 'UsersController@changePassword')->name('password.updated');
 
         Route::group(['prefix' => 'admin'], function () {
             Route::group(['prefix' => 'users'], function () {
