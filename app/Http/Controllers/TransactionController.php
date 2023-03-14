@@ -45,6 +45,27 @@ class TransactionController extends Controller
         return $this->getTransaction($user_id, $customer);
     }
 
+    public function indexAdmin(Request $request)
+    {
+        $start_date = $request->start_date;
+        $end_date = $request->end_date;
+        $userId = $request->user_id;
+
+        $transactions = DB::table('transactions')
+            ->leftJoin('users', 'users.id', '=', 'transactions.user_id');
+
+        if ($start_date) {
+            $transactions = $transactions->whereDate('transactions.created_at', '>=', $start_date);
+        }
+
+        if ($end_date) {
+            $transactions = $transactions->whereDate('transactions.created_at', '<=', $end_date);
+        }
+        $transactions = $transactions->where('user_id', $userId)
+            ->orderBy('transactions.id', 'DESC')->paginate(5);
+        return view('transactions.admin', compact('transactions'));
+    }
+
     public function admin(Customer $customer, User $user)
     {
         return $this->getTransaction($user->id, $customer);

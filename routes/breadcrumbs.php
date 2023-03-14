@@ -76,3 +76,7 @@ Breadcrumbs::for('customers', function ($trail) {
 Breadcrumbs::for('transactions', function ($trail, $customer) {
     $trail->push('Transaction', route('transactions.index', $customer));
 });
+
+Breadcrumbs::for('transactionsAdmin', function ($trail) {
+    $trail->push('Transaction Management', route('transactions.admin.index'));
+});

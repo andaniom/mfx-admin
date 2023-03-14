@@ -55,6 +55,7 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
                 Route::get('/{user}/edit', 'UsersController@edit')->name('users.edit');
                 Route::patch('/{user}/update', 'UsersController@update')->name('users.update');
                 Route::delete('/{user}/delete', 'UsersController@destroy')->name('users.destroy');
+                Route::get('/list', 'UsersController@list')->name('users.list');
             });
 
             Route::group(['prefix' => 'events'], function () {
@@ -78,6 +79,8 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
             });
 
             Route::get('/attendance', 'AttendanceController@admin')->name('attendance.admin');
+            Route::get('/customers', 'CustomerController@admin')->name('customers.admin');
+            Route::get('/transactions', 'TransactionController@indexAdmin')->name('transactions.admin.index');
         });
 
         Route::group(['prefix' => 'settings'], function () {

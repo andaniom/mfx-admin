@@ -64,56 +64,6 @@
         </div>
     </div>
     <script>
-        // Get the clock element
-        let clock = document.getElementById("liveClock");
-
-        // Function to update the clock display
-        function updateClock() {
-            let date = new Date();
-            clock.innerHTML = date.toLocaleTimeString();
-        }
-
-        // Update the clock every 1000 milliseconds (1 second)
-        setInterval(updateClock, 1000);
-
-        // Get the Check In button
-        let checkIn = document.getElementById("checkIn");
-
-        // Add a click events listener to the Check In button
-        checkIn.addEventListener("click", function () {
-            $.ajax({
-                url: '/attendance/checkin',
-                method: 'post',
-                data: {
-                    _token: '{{ csrf_token() }}'
-                },
-                success: function (response) {
-                    location.reload();
-                },
-                error: function (response) {
-                    // Handle the error response
-                }
-            });
-        });
-
-        let checkOut = document.getElementById("checkOut");
-
-        // Add a click events listener to the Check Out button
-        checkOut.addEventListener("click", function () {
-            $.ajax({
-                url: '/attendance/checkout',
-                method: 'post',
-                data: {
-                    _token: '{{ csrf_token() }}'
-                },
-                success: function (response) {
-                    location.reload();
-                },
-                error: function (response) {
-                    // Handle the error response
-                }
-            });
-        });
         $(document).ready(function () {
             $("#searchButton").click(function () {
                 const startDate = $("#startDate").val();

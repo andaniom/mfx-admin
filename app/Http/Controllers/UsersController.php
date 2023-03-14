@@ -8,14 +8,11 @@ use App\Models\Customer;
 use App\Models\Setting;
 use App\Models\Transaction;
 use App\Models\User;
-use App\Notifications\CreateUser;
 use App\Notifications\RegisterUserNotification;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
 use Spatie\Permission\Models\Role;
 
@@ -182,6 +179,11 @@ class UsersController extends Controller
 
 
         return redirect()->route('login')->with('success', 'Your password has been changed successfully.');
+    }
+    public function list()
+    {
+        $users = User::all();
+        return response()->json($users);
     }
 
 
