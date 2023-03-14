@@ -62,8 +62,28 @@ class TransactionController extends Controller
             $transactions = $transactions->whereDate('transactions.created_at', '<=', $end_date);
         }
         $transactions = $transactions->where('user_id', $userId)
-            ->orderBy('transactions.id', 'DESC')->paginate(5);
-        return view('transactions.admin', compact('transactions'));
+            ->orderBy('transactions.id', 'DESC');
+
+        $transactions = $transactions->paginate(5);
+
+        $count = $transactions->count();
+
+        $total_amount = DB::table('transactions')
+            ->leftJoin('users', 'users.id', '=', 'transactions.user_id')
+            ->where('user_id', $userId);
+
+        if ($start_date) {
+            $total_amount = $total_amount->whereDate('transactions.created_at', '>=', $start_date);
+        }
+
+        if ($end_date) {
+            $total_amount = $total_amount->whereDate('transactions.created_at', '<=', $end_date);
+        }
+        $total_amount = $total_amount->sum('amount');
+
+        Log::info($total_amount);
+
+        return view('transactions.admin', compact('transactions', 'count', 'total_amount'));
     }
 
     public function admin(Customer $customer, User $user)

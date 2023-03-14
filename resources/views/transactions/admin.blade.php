@@ -34,7 +34,7 @@
             <div class="mt-2">
                 @include('layouts.partials.messages')
             </div>
-
+            <div class="form-group">{{number_format($total_amount)}} / {{$count}} Transactions </div>
             <div class="table-responsive">
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
